@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Areas.Identity.Data;
+using TimeProductivityTracking.web.Models;
 
 namespace TimeProductivityTracking.web.Data;
 
@@ -19,4 +20,6 @@ public class IdentityAuthContext : IdentityDbContext<IdentityAuthUser>
         // For example, you can rename the ASP.NET Identity table names and more.
         // Add your customizations after calling base.OnModelCreating(builder);
     }
+
+public DbSet<TimeProductivityTracking.web.Models.SECContract> SECContract { get; set; } = default!;
 }
