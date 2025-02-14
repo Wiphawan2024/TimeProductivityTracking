@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Diagnostics;
 using TimeProductivityTracking.web.Models;
 
@@ -15,11 +16,14 @@ namespace TimeProductivityTracking.web.Controllers
 
         public IActionResult Index()
         {
+
+
             return View();
         }
 
         public IActionResult Privacy()
         {
+          
             return View();
         }
 
