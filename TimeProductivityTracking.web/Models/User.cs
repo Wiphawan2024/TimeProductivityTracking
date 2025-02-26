@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Runtime.ExceptionServices;
 
 namespace TimeProductivityTracking.web.Models
@@ -16,6 +17,8 @@ namespace TimeProductivityTracking.web.Models
         public string Phone { get; set; }
         [DisplayName("Email")]
         public string Email { get; set; }
+        
+        public Roles Role { get; set; }
 
 
         [DisplayName("Hire Date")]
@@ -23,4 +26,6 @@ namespace TimeProductivityTracking.web.Models
         public DateTime HireDate { get; set; }
 
     }
+    public enum Roles { Admin, Manager, HR, Member, User }
+
 }

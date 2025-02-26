@@ -5,7 +5,7 @@
 namespace TimeProductivityTracking.web.Migrations
 {
     /// <inheritdoc />
-    public partial class Productivities : Migration
+    public partial class UserRole : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

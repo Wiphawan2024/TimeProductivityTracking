@@ -7,7 +7,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("IdentityAuthContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityAuthContextConnection' not found.");
 
 builder.Services.AddDbContext<IdentityAuthContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDefaultIdentity<IdentityAuthUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<IdentityAuthContext>();
+builder.Services.AddDefaultIdentity<IdentityAuthUser>
+    (options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>() // Add role 
+    .AddEntityFrameworkStores<IdentityAuthContext>();
+
 //1. Add connect database
 
 builder.Services.AddDbContext<ProductivitiesContext>(options =>

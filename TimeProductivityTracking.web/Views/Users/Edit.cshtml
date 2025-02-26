@@ -34,6 +34,12 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+
+                @Html.DropDownListFor(m => m.Role, new SelectList(Enum.GetValues(typeof(Roles))), "Select Role") <br /><br />
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="HireDate" class="control-label"></label>
                 <input asp-for="HireDate" class="form-control" />
                 <span asp-validation-for="HireDate" class="text-danger"></span>

@@ -2,27 +2,41 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
 
+
+using TimeProductivityTracking.web.Areas.Identity.Data;
+
 namespace TimeProductivityTracking.web.Controllers
 {
     public class UsersController : Controller
     {
         private readonly ProductivitiesContext _context;
+        private UserManager<IdentityAuthUser> _userManager;
+        private RoleManager<IdentityRole> _roleManager;
 
-        public UsersController(ProductivitiesContext context)
+
+        public UsersController(ProductivitiesContext context,
+            UserManager<IdentityAuthUser> userManager,
+            RoleManager<IdentityRole> roleManager  )
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            var users = await _context.Users.ToListAsync();
+            return View(users); 
+            /*return View(await _context.Users.ToListAsync()); */
+
         }
 
         // GET: Users/Details/5
@@ -54,10 +68,23 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserID,FName,LName,Phone,Email,HireDate")] User user)
+        public async Task<IActionResult> Create([Bind("UserID,FName,LName,Phone,Email,Role,HireDate")] User user)
         {
             if (ModelState.IsValid)
             {
+                string roleName = user.Role.ToString();
+                string userId = user.UserID.ToString();
+
+                var userA = await _userManager.FindByNameAsync(userId);
+                if (userA !=null)
+                {
+                    _context.Add(userA);
+                    await _userManager.AddToRoleAsync(userA, roleName);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
+
+                }
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -68,6 +95,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -86,7 +114,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserID,FName,LName,Phone,Email,HireDate")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserID,FName,LName,Phone,Email,Role,HireDate")] User user)
         {
             if (id != user.UserID)
             {
