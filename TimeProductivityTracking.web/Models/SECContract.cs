@@ -5,7 +5,7 @@ namespace TimeProductivityTracking.web.Models
     public class SECContract
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int SECContractID { get; set; }
+        public int SECContractId { get; set; }
         public string SECName { get; set; }
         public string County { get; set; }
         public string Address { get; set; }
@@ -13,5 +13,7 @@ namespace TimeProductivityTracking.web.Models
         public string Phone { get; set; }
         public string Email { get; set; }
 
+      
+    
     }
 }

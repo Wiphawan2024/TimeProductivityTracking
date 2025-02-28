@@ -34,7 +34,7 @@ namespace TimeProductivityTracking.web.Controllers
             }
 
             var sECContract = await _context.SECContracts
-                .FirstOrDefaultAsync(m => m.SECContractID == id);
+                .FirstOrDefaultAsync(m => m.SECContractId == id);
             if (sECContract == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SECContractID,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
+        public async Task<IActionResult> Create([Bind("SECContractId,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
         {
             if (ModelState.IsValid)
             {
@@ -86,9 +86,9 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SECContractID,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
+        public async Task<IActionResult> Edit(int id, [Bind("SECContract,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
         {
-            if (id != sECContract.SECContractID)
+            if (id != sECContract.SECContractId)
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace TimeProductivityTracking.web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SECContractExists(sECContract.SECContractID))
+                    if (!SECContractExists(sECContract.SECContractId))
                     {
                         return NotFound();
                     }
@@ -125,7 +125,7 @@ namespace TimeProductivityTracking.web.Controllers
             }
 
             var sECContract = await _context.SECContracts
-                .FirstOrDefaultAsync(m => m.SECContractID == id);
+                .FirstOrDefaultAsync(m => m.SECContractId == id);
             if (sECContract == null)
             {
                 return NotFound();
@@ -151,7 +151,7 @@ namespace TimeProductivityTracking.web.Controllers
 
         private bool SECContractExists(int id)
         {
-            return _context.SECContracts.Any(e => e.SECContractID == id);
+            return _context.SECContracts.Any(e => e.SECContractId == id);
         }
     }
 }

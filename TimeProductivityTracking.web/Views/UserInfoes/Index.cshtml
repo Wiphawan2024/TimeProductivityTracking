@@ -1,10 +1,12 @@
-﻿@model IEnumerable<TimeProductivityTracking.web.Models.User>
+﻿@model IEnumerable<TimeProductivityTracking.web.Models.UserInfo>
+
+
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Users Management </h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -30,10 +32,14 @@
             <th>
                 @Html.DisplayNameFor(model => model.HireDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RateID)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
+
 @foreach (var item in Model) {
         <tr>
             <td>
@@ -48,19 +54,30 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Role)
-                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.HireDate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.UserID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.UserID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserID">Delete</a> |
-            
-                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register User</a>
+                @Html.DisplayFor(modelItem => item.RateID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+              @if (item.Register==0)
+                    {
+                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register User</a>
 
+                    }
+                    else
+                    {
+                        <a asp-action="" >Registered</a>
+                    }
+
+           
             </td>
         </tr>
 }

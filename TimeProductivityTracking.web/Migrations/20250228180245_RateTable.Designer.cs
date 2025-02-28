@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250228180245_RateTable")]
+    partial class RateTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -156,9 +159,6 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("RateID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Register")
                         .HasColumnType("int");
 
                     b.Property<int>("Role")

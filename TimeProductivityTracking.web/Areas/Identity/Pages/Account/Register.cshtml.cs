@@ -17,13 +17,20 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using TimeProductivityTracking.web.Areas.Identity.Data;
+using TimeProductivityTracking.web.Data;
+using TimeProductivityTracking.web.Models;
+
 
 namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
+
+        private ProductivitiesContext _context;
+
         private readonly SignInManager<IdentityAuthUser> _signInManager;
         private readonly UserManager<IdentityAuthUser> _userManager;
         private readonly IUserStore<IdentityAuthUser> _userStore;
@@ -36,7 +43,8 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
             IUserStore<IdentityAuthUser> userStore,
             SignInManager<IdentityAuthUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ProductivitiesContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +52,7 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -134,6 +143,22 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                    var userInfo = await _context.Users
+                        .FirstOrDefaultAsync(r=> r.Email==Input.Email);
+                    if (userInfo != null)
+                    {
+                        userInfo.Register = 1;
+                     
+                        await _context.SaveChangesAsync();
+                      
+
+                    }
+                  
+
+                    
+
+
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

@@ -12,8 +12,8 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250226191621_UserTable")]
-    partial class UserTable
+    [Migration("20250228175655_MyMigrationV1")]
+    partial class MyMigrationV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,9 +25,61 @@ namespace TimeProductivityTracking.web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivities", b =>
+                {
+                    b.Property<int>("ProductivitiesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductivitiesId"));
+
+                    b.Property<int>("Achieved_days")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ActiveProject")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date_Achieved")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateOnly>("Date_Planned")
+                        .HasColumnType("date");
+
+                    b.Property<int>("EMP_Application")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EMP_Planned")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlannedDays")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SECContractId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SEC_Registered")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Tasks_TBC_ach")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Tasks_TBC_planned")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("YearToDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ProductivitiesId");
+
+                    b.ToTable("Productivities", (string)null);
+                });
+
             modelBuilder.Entity("TimeProductivityTracking.web.Models.SECContract", b =>
                 {
-                    b.Property<int>("SECContractID")
+                    b.Property<int>("SECContractId")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
@@ -54,18 +106,18 @@ namespace TimeProductivityTracking.web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("SECContractID");
+                    b.HasKey("SECContractId");
 
                     b.ToTable("SECContract", (string)null);
                 });
 
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.User", b =>
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.UserInfo", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserID"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -86,12 +138,15 @@ namespace TimeProductivityTracking.web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RateID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("UserID");
+                    b.HasKey("UserId");
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("UserInfo", (string)null);
                 });
 #pragma warning restore 612, 618
         }
