@@ -30,12 +30,7 @@ namespace TimeProductivityTracking.web.Models
         [Required(ErrorMessage = "Rate is required.")]
         [ForeignKey("Rate")]
         public int RateID { get; set; }
-
         public int Register { get; set; } = 0;
-
-
-    
-     
     }
     public enum Roles { Admin, Manager, HR, Member, User }
 

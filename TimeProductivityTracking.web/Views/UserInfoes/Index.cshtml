@@ -66,7 +66,7 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a> |
               @if (item.Register==0)
                     {
                         <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register User</a>
@@ -74,7 +74,7 @@
                     }
                     else
                     {
-                        <a asp-action="" >Registered</a>
+                        <a>Registered </a>
                     }
 
            

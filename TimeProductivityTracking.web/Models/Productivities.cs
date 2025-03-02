@@ -1,31 +1,41 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TimeProductivityTracking.web.Models
 {
     public class Productivities
     {
-        [Key]
-        public int ProductivitiesId { get; set; }
-        public DateOnly Date_Planned { get; set; }
-        public DateTime SEC_Registered { get; set; }
-        public int EMP_Application {  get; set; }
-        public int EMP_Planned { get; set; }
-        public int ActiveProject { get; set; }
-        public DateTime YearToDate { get; set; }
+   
+        public int Id{ get; set; }
+        [DisplayName("Monthly")]
+        [DataType(DataType.Date)]
+        public DateTime Monthly { get; set; }
+        [DisplayName("County")]
+        public Counties County { get; set; }
+        [DisplayName("Planned Days")]
         public int PlannedDays {  get; set; }
-        public int Tasks_TBC_planned {  get; set; }
-        public DateTime Date_Achieved {  get; set; }
-        public int Achieved_days {  get; set; }
-        public int Tasks_TBC_ach { get; set; }
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-        [ForeignKey("SECContract")]
-        public int SECContractId { get; set; }
+        [DisplayName("Task")]
+        public Tasks  Task { get; set; }
+        [DisplayName("Mentor")]
+        public string Mentor { get; set; }
 
-       // public User User { get; set; }
+      //  [ForeignKey("Contractor")]
+        public int ContractorId_FK { get; set; }
+       // [ForeignKey("SECContract")]
+        public Contractor contractor { get; set; }
+ 
+      
 
-      //  public SECContract SECContract { get; set; }
 
+    
+    }
+    public enum Counties { Longford,Roscommon,Sligo,Donegal,Leitrim,Mayo,Meath,Wexford,Wicklow }
+    public enum Tasks
+    { [Description("New SEC Registered")] NewSECRegistered = 0,
+      [Description("Energy Master Plan(EMP)")] EMP =1,
+      [Description("EMP Completed")] EMPCompleted=2,
+      [Description("Project - Community Retrofit started")] ProjectCommunityRetrofitStarted=3
     }
 }
+

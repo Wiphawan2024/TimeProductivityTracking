@@ -1,0 +1,101 @@
+﻿@model TimeProductivityTracking.web.Models.Productivities
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Productivities</h4>
+<hr />
+
+<div>
+
+    <label asp-for="Monthly" class="control-label"></label>
+    <input asp-for="Monthly" class="form-control" />
+    <span asp-validation-for="Monthly" class="text-danger"></span>
+
+</div>
+
+
+
+<table class="table" >
+
+    <thead>
+        <tr>
+             <th>
+             <a> SEC Name</a>
+            </th>
+          
+                
+
+            </th>
+            <th>       
+                   <label asp-for="County" class="control-label"></label>
+            </th>
+            <th>
+
+                <label asp-for="PlannedDays" class="control-label"></label>
+            </th>
+            <th>
+                <label asp-for="Task" class="control-label"></label>
+               
+            </th>
+            <th>
+                <label asp-for="Mentor" class="control-label"></label>
+               
+            </th>
+            <th>
+                <label asp-for="ContractorId_FK" class="control-label"></label>
+                
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+  
+    <tbody>
+        @foreach (var item in (IEnumerable<SECContract> )ViewData["SEC"])
+        {     
+          <tr>
+            <th> @item.SECName</th>
+       
+            <th>
+                <div class="form-group">
+                    <select asp-for="County" class="form-control"></select>
+                    <span asp-validation-for="County" class="text-danger"></span>
+
+                </div>
+            </th>
+            <th>
+                <input asp-for="PlannedDays" class="form-control" />
+                <span asp-validation-for="PlannedDays" class="text-danger"></span>
+            </th>
+            <th>
+                <select asp-for="Task" class="form-control"></select>
+                <span asp-validation-for="Task" class="text-danger"></span>
+            </th>
+            <th>
+                <input asp-for="Mentor" class="form-control" />
+                <span asp-validation-for="Mentor" class="text-danger"></span>
+            </th>
+            <th>
+                <input asp-for="ContractorId_FK" class="form-control" />
+                <span asp-validation-for="ContractorId_FK" class="text-danger"></span>
+                <th></th>
+            </tr>
+        }
+        <tbody>
+
+
+  </table>
+        
+
+   
+ 
+    <a asp-action="Index">Back to List</a>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
