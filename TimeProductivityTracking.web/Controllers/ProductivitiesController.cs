@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -22,6 +23,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index()
         {
+
             return View(await _context.ProductivitieS.ToListAsync());
         }
 
@@ -46,15 +48,28 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
-           var sec = _context.SECContracts.ToList();
 
+            var plannedDay=new List<SelectDays>
+            {
+                new SelectDays { id = 1, name = "Choie1", PlannedDay = 0 },
+                new SelectDays { id = 2, name = "Choie2", PlannedDay = 0.1m },
+                new SelectDays { id=3,name="Choie3",PlannedDay=0.2m},
+                new SelectDays { id=4,name="Choie4",PlannedDay=0.3m},
+                new SelectDays { id=5,name="Choie5",PlannedDay=0.4m},
+                new SelectDays { id=6,name="Choie6",PlannedDay=0.5m},
+                new SelectDays { id=7,name="Choie7",PlannedDay=0.6m},
+                new SelectDays { id=8,name="Choie8",PlannedDay=0.7m},
+                new SelectDays { id=9,name="Choie9",PlannedDay=0.8m},
+                new SelectDays { id=10,name="Choie10",PlannedDay=0.9m},
+                new SelectDays { id=11,name="Choie11",PlannedDay=10},
+            };
+
+            ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
+
+            var sec = _context.SECContracts.ToList();
             ViewData["SEC"] = sec;
-            for (var i = 0; i < sec.Count; i++  )
-             {
-                var secContract = sec[i];
-                Console.WriteLine(secContract.SECName);
-             }
 
+       
             return View();
         }
 

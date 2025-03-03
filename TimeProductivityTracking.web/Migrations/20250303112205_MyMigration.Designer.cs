@@ -12,7 +12,7 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250301075650_MyMigration")]
+    [Migration("20250303112205_MyMigration")]
     partial class MyMigration
     {
         /// <inheritdoc />

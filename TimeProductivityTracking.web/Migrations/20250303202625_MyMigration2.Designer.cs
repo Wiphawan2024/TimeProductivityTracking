@@ -12,7 +12,7 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250301075727_MyMigration2")]
+    [Migration("20250303202625_MyMigration2")]
     partial class MyMigration2
     {
         /// <inheritdoc />
@@ -69,15 +69,15 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<int>("PlannedDays")
                         .HasColumnType("int");
 
-                    b.Property<int>("Task")
+                    b.Property<int?>("SECContractId")
                         .HasColumnType("int");
 
-                    b.Property<int>("contractorSECContractId")
+                    b.Property<int>("Task")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("contractorSECContractId");
+                    b.HasIndex("SECContractId");
 
                     b.ToTable("Productivities", (string)null);
                 });
@@ -182,13 +182,9 @@ namespace TimeProductivityTracking.web.Migrations
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivities", b =>
                 {
-                    b.HasOne("TimeProductivityTracking.web.Models.Contractor", "contractor")
+                    b.HasOne("TimeProductivityTracking.web.Models.SECContract", null)
                         .WithMany("Productivities")
-                        .HasForeignKey("contractorSECContractId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("contractor");
+                        .HasForeignKey("SECContractId");
                 });
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Contractor", b =>
@@ -208,7 +204,7 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Navigation("UserInfo");
                 });
 
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.Contractor", b =>
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.SECContract", b =>
                 {
                     b.Navigation("Productivities");
                 });
