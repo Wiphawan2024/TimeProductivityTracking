@@ -16,16 +16,28 @@
                 @Html.DisplayNameFor(model => model.Monthly)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.SECName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.County)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PlannedDays)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Task)
+                @Html.DisplayNameFor(model => model.Task_P)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Mentor)
+                @Html.DisplayNameFor(model => model.CounryMentor_P)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AchevedDays)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tasks_A)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CounryMentor_A)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ContractorId_FK)
@@ -40,16 +52,28 @@
                 @Html.DisplayFor(modelItem => item.Monthly)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.SECName)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.County)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.PlannedDays)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Task)
+                @Html.DisplayFor(modelItem => item.Task_P)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Mentor)
+                @Html.DisplayFor(modelItem => item.CounryMentor_P)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AchevedDays)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tasks_A)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CounryMentor_A)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ContractorId_FK)

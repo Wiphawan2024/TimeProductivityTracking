@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250305172650_MyMigrationV3")]
+    partial class MyMigrationV3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,25 +33,20 @@ namespace TimeProductivityTracking.web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AchevedDays")
-                        .HasColumnType("int");
-
                     b.Property<int>("ContractorId_FK")
                         .HasColumnType("int");
 
-                    b.Property<string>("CounryMentor_A")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CounryMentor_P")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("County")
+                    b.Property<int>("County")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Monthly")
+                    b.Property<string>("Mentor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Monthly")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PlannedDays")
+                    b.Property<int>("PlannedDays")
                         .HasColumnType("int");
 
                     b.Property<int?>("SECContractId")
@@ -58,10 +56,7 @@ namespace TimeProductivityTracking.web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Task_P")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Tasks_A")
+                    b.Property<int>("Task")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -1,111 +1,122 @@
-﻿@model TimeProductivityTracking.web.Models.Productivities
+﻿@model List<TimeProductivityTracking.web.Models.Productivities>
 
 @{
     ViewData["Title"] = "Create";
 }
-
 <h1>Create</h1>
-
-
 <h4>Productivities</h4>
 <hr />
 
 
-
-
-
- <form asp-action="Create">
-<table class="table" >
-
-    <thead>
+<form asp-action="Create">
+    <div>
+        <a> Monthly</a>
+    
+    </div>
+   
+    <div class="form-group">
+        <thead>
+    <table class="table">
+   
             <tr>
-             <div class="form-group">
-             <th>
-             <a> SEC Name</a>
-            </th>
-                </div >
-            </th>
                 <div class="form-group">
-            <th>       
-                   <label asp-for="County" class="control-label"></label>
-            </th></div>
+                <th>     <a> SEC Name</a> </th>
+                </div >
+                <div class="form-group">
+                <th> <a>County </a> </th></div>
 
-            <th>
+                <th> <a>Planned Days </a> </th>
+                <th> <a>Task Plan</a> </th>
+                <th> <a>Mentor Plan</a> </th>
 
-                <label asp-for="PlannedDays" class="control-label"></label>
-            </th>
-            <th>
-                <label asp-for="Task" class="control-label"></label>
-               
-            </th>
-            <th>
-                <label asp-for="Mentor" class="control-label"></label>
-               
-            </th>
-            <th>
-                <label asp-for="ContractorId_FK" class="control-label"></label>
-                
-            </th>
-            <th></th>
-        </tr>
-    </thead>
+                <th> <a>Acheved Days </a> </th>
+                <th> <a>Task Acheved</a> </th>
+                <th> <a>Mentor Acheved</a> </th>
 
-  
-    <tbody>
-        @foreach (var item in (IEnumerable<SECContract> )ViewData["SEC"])
-        {     
-          <tr>
-        
-                    <th> @item.SECName</th>
-            
-               <th>
-               <div class="form-group">
-                  @Html.DropDownListFor(m => m.County, new SelectList(Enum.GetValues(typeof(Counties)))) 
 
-                <span asp-validation-for="County" class="text-danger"></span>
-               </div>
-            </th>
-            <th>
-            <div>
-
-                            @Html.DropDownList("PlannedDay,", ViewBag.SelectPlanDay as SelectList, "   ")
-                            <span asp-validation-for="PlannedDays" class="text-danger"></span>
-
-            </div>
-         
-            </th>
-            <th>
-              
-                  @Html.DropDownListFor(m => m.Task, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
-
-                <span asp-validation-for="Task" class="text-danger"></span>
-            </th>
-            <th>
-          
-                <input asp-for="Mentor" value=@User.Identity.Name class="form-control" />
-                <span asp-validation-for="Mentor" class="text-danger"></span>
-            </th>
-            <th>
-                 <input asp-for="Mentor" value=@User.Identity.Name class="form-control" />
-                <span asp-validation-for="ContractorId_FK" class="text-danger"></span>
+                <th><a>ContractorId_FK</a>  </th>
                 <th></th>
             </tr>
-        }
+        </thead>
+
+
         <tbody>
 
 
-  </table>
+            @{
+                int i = 0;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <div>
+                    <th> @item.SECName</th>
+                    </div>
+
+                    <div class="form-group">
+                    <th> @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
+                    </div>
+
+                    <div>
+                    <th>
+                       @Html.DropDownListFor(Model=>Model[i].PlannedDays, ViewBag.SelectPlanDay as SelectList, " ")
+                   </th>
+                    </div>
+                    <div>
+                    <th>
+                     @Html.DropDownListFor(Model => Model[i].Task_P, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
+                    </th>
+                    </div>
+                    <div>  <th><input asp-for="@Model[i].CounryMentor_P" value=@User.Identity.Name class="form-control" />   </th>  </div>
+                    <div>
+                    <th>
+                         @Html.DropDownListFor(Model => Model[i].AchevedDays, ViewBag.SelectPlanDay as SelectList, " ")
+                    </th></div>
+                <div>
+                <th>
+                        @Html.DropDownListFor(Model => Model[i].Tasks_A, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
+                </th>
+                </div>
+
+                <div>
+                <th> <input asp-for="@Model[i].CounryMentor_A " value=@User.Identity.Name class="form-control" /> </th></div>
+
+
+
+                    <div>
+                    <th>
+                        <input asp-for="@Model[i].CounryMentor_P " value=@User.Identity.Name class="form-control" />
+                        <span asp-validation-for="@Model[i].ContractorId_FK" class="text-danger"></span>
+                    </th>
+                    </div>
+                </tr>
+
+                i = i + 1;
+
+            }
+
+
+
+        </tbody>
+
+    </table>
+
+
+
 
     <div class="form-group">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
-  </form>     
 
-   
- 
-    <a asp-action="Index">Back to List</a>
+</form>
+
+
+
+<a asp-action="Index">Back to List</a>
 
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

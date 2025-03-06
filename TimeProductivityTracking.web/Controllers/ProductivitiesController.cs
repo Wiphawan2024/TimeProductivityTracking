@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,7 +22,6 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index()
         {
-
             return View(await _context.ProductivitieS.ToListAsync());
         }
 
@@ -48,8 +46,34 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
+            var SECName = _context.SECContracts.ToList();
+            var NewProductivity = new List<Productivities>();
 
-            var plannedDay=new List<SelectDays>
+
+            foreach (var item in SECName)
+            {
+                var product = new Productivities
+                {
+                    Monthly = DateTime.Now,
+                    SECName = item.SECName,
+                    County = null,
+                    PlannedDays = null,
+                    Task_P = null,
+                    CounryMentor_P = null,
+                    AchevedDays = null,
+
+                    ContractorId_FK = item.SECContractId
+                };
+                NewProductivity.Add(product);
+            }
+
+
+            foreach (var n in NewProductivity)
+            {
+                Console.WriteLine(n.SECName);
+            }
+
+            var plannedDay = new List<SelectDays>
             {
                 new SelectDays { id = 1, name = "Choie1", PlannedDay = 0 },
                 new SelectDays { id = 2, name = "Choie2", PlannedDay = 0.1m },
@@ -65,12 +89,10 @@ namespace TimeProductivityTracking.web.Controllers
             };
 
             ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
-
             var sec = _context.SECContracts.ToList();
             ViewData["SEC"] = sec;
 
-       
-            return View();
+            return View(NewProductivity);
         }
 
         // POST: Productivities/Create
@@ -78,16 +100,34 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Monthly,County,PlannedDays,Task,Mentor,ContractorId_FK")] Productivities productivities)
+        public async Task<IActionResult> Create([Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A,ContractorId_FK")] List< Productivities> productivities)
         {
+
+
             if (ModelState.IsValid)
             {
+
+
+                for (int i = 0; i < productivities.Count; i++)
+                {
+                    foreach (var item in productivities)
+                    {
+                        item.Monthly = DateTime.Now;
+                        item.AchevedDays = null;
+                        item.Tasks_A = null;
+                        item.CounryMentor_A = null;
+                    }
+                }
+
                 _context.Add(productivities);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(productivities);
         }
+
+
+
 
         // GET: Productivities/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -110,13 +150,12 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Monthly,County,PlannedDays,Task,Mentor,ContractorId_FK")] Productivities productivities)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A,ContractorId_FK")] Productivities productivities)
         {
             if (id != productivities.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try

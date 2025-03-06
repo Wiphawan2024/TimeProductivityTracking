@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace OfficeManagement.Models
+namespace TimeProductivityTracking.web.Models
 {
     public class Rate
     {

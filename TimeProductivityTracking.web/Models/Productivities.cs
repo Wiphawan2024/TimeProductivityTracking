@@ -11,19 +11,27 @@ namespace TimeProductivityTracking.web.Models
         public int Id{ get; set; }
         [DisplayName("Monthly")]
         [DataType(DataType.Date)]
-        public DateTime Monthly { get; set; }
+
+        public DateTime? Monthly { get; set; } 
+        [DisplayName("SEC Name")]
+        public string SECName { get; set; }
         [DisplayName("County")]
-        public Counties County { get; set; }
+        public Counties? County { get; set; }
         [DisplayName("Planned Days")]
-        public int  PlannedDays{  get; set; }
-        [DisplayName("Task")]
-        public Tasks  Task { get; set; }
+        public int?  PlannedDays{  get; set; }
+        [DisplayName("Task_P")]
+        public Tasks?  Task_P { get; set; }
         [DisplayName("Mentor")]
-        public string Mentor { get; set; }
+        public string? CounryMentor_P { get; set; }
+
+        public int? AchevedDays { get; set; }
+        public Tasks? Tasks_A {  get; set; }
+        public string? CounryMentor_A { get; set; }
 
       //  [ForeignKey("Contractor")]
         public int ContractorId_FK { get; set; }
        // [ForeignKey("SECContract")]
+
 
     }
    

@@ -22,9 +22,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Productivities" asp-action="Create">Prodcutivites</a>
-                        </li>
+                      
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Contractors" asp-action="Index">Contractors</a>
                         </li>
@@ -43,6 +41,20 @@
                             </ul>
 
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle " href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">PRoductivities</a>
+
+                            <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Index">View Productivities</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Create">Create </a></li>
+
+                            </ul>
+
+                        </li>
+
+
+
+
 
                         <li class="nav-item">
                            
