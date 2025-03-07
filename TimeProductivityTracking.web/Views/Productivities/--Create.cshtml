@@ -1,4 +1,4 @@
-﻿@model TimeProductivityTracking.web.Models.Productivities
+﻿@model TimeProductivityTracking.web.Models.Productivity
 
 @{
     ViewData["Title"] = "Create";
@@ -57,11 +57,7 @@
                 <input asp-for="CounryMentor_A" class="form-control" />
                 <span asp-validation-for="CounryMentor_A" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="ContractorId_FK" class="control-label"></label>
-                <input asp-for="ContractorId_FK" class="form-control" />
-                <span asp-validation-for="ContractorId_FK" class="text-danger"></span>
-            </div>
+           
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

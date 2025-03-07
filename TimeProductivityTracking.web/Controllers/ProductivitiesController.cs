@@ -22,7 +22,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index()
         {
-            return View(await _context.ProductivitieS.ToListAsync());
+            return View(await _context.Productivities.ToListAsync());
         }
 
         // GET: Productivities/Details/5
@@ -33,7 +33,7 @@ namespace TimeProductivityTracking.web.Controllers
                 return NotFound();
             }
 
-            var productivities = await _context.ProductivitieS
+            var productivities = await _context.Productivities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productivities == null)
             {
@@ -46,23 +46,24 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
-            var SECName = _context.SECContracts.ToList();
-            var NewProductivity = new List<Productivities>();
 
+            var user=_context.Users.FirstOrDefault(u=>u.Email==User.Identity.Name);
+            if (user != null)
+            {
+                ViewBag.userId = user.UserId;
+             
+            }
+
+            var SECName = _context.SECContracts.ToList();
+            var NewProductivity = new List<Productivity>();
 
             foreach (var item in SECName)
             {
-                var product = new Productivities
+                var product = new Productivity
                 {
                     Monthly = DateTime.Now,
-                    SECName = item.SECName,
-                    County = null,
-                    PlannedDays = null,
-                    Task_P = null,
-                    CounryMentor_P = null,
-                    AchevedDays = null,
+                    SECName = item.SECName
 
-                    ContractorId_FK = item.SECContractId
                 };
                 NewProductivity.Add(product);
             }
@@ -100,27 +101,36 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A,ContractorId_FK")] List< Productivities> productivities)
-        {
+        public async Task<IActionResult> Create([Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
+      {
 
 
             if (ModelState.IsValid)
             {
 
+                int i = 0;
+                
+                
 
-                for (int i = 0; i < productivities.Count; i++)
-                {
                     foreach (var item in productivities)
-                    {
+                        {
+                           
                         item.Monthly = DateTime.Now;
-                        item.AchevedDays = null;
-                        item.Tasks_A = null;
-                        item.CounryMentor_A = null;
-                    }
+                        item.SECName = productivities[i].SECName;
+                        item.County = productivities[i].County;
+                        item.PlannedDays = productivities[i].PlannedDays;
+                        item.Task_P = productivities[i].Task_P;
+                        item.CounryMentor_P = productivities[i].CounryMentor_P;
+                        item.AchevedDays = productivities[i].AchevedDays;
+                        item.Tasks_A = productivities[i].Tasks_A;
+                        item.CounryMentor_A = productivities[i].CounryMentor_A;
+                    i++;
                 }
 
-                _context.Add(productivities);
+
+                _context.AddRange(productivities);
                 await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(productivities);
@@ -137,7 +147,7 @@ namespace TimeProductivityTracking.web.Controllers
                 return NotFound();
             }
 
-            var productivities = await _context.ProductivitieS.FindAsync(id);
+            var productivities = await _context.Productivities.FindAsync(id);
             if (productivities == null)
             {
                 return NotFound();
@@ -150,7 +160,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A,ContractorId_FK")] Productivities productivities)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] Productivity productivities)
         {
             if (id != productivities.Id)
             {
@@ -187,7 +197,7 @@ namespace TimeProductivityTracking.web.Controllers
                 return NotFound();
             }
 
-            var productivities = await _context.ProductivitieS
+            var productivities = await _context.Productivities
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (productivities == null)
             {
@@ -202,10 +212,10 @@ namespace TimeProductivityTracking.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var productivities = await _context.ProductivitieS.FindAsync(id);
+            var productivities = await _context.Productivities.FindAsync(id);
             if (productivities != null)
             {
-                _context.ProductivitieS.Remove(productivities);
+                _context.Productivities.Remove(productivities);
             }
 
             await _context.SaveChangesAsync();
@@ -214,7 +224,7 @@ namespace TimeProductivityTracking.web.Controllers
 
         private bool ProductivitiesExists(int id)
         {
-            return _context.ProductivitieS.Any(e => e.Id == id);
+            return _context.Productivities.Any(e => e.Id == id);
         }
     }
 }

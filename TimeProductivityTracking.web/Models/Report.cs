@@ -3,7 +3,7 @@
     public class Report
     {
         public int Id { get; set; }
-        public List<Productivities> Productivities = new List<Productivities>();
+        public List<Productivity> Productivities = new List<Productivity>();
 
 
     }

@@ -1,4 +1,4 @@
-﻿@model TimeProductivityTracking.web.Models.Productivities
+﻿@model TimeProductivityTracking.web.Models.Productivity
 
 @{
     ViewData["Title"] = "Delete";
@@ -65,12 +65,7 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CounryMentor_A)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ContractorId_FK)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ContractorId_FK)
-        </dd>
+    
     </dl>
     
     <form asp-action="Delete">

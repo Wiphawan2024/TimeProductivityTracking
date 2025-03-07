@@ -15,7 +15,7 @@ namespace TimeProductivityTracking.web.Models
         public string Phone { get; set; }
         public string Email { get; set; }
         
-        public ICollection<Productivities> Productivities { get; set; }
+        public ICollection<Productivity> Productivities { get; set; }
 
 
     }

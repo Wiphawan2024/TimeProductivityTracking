@@ -1,4 +1,4 @@
-﻿@model List<TimeProductivityTracking.web.Models.Productivities>
+﻿@model List<TimeProductivityTracking.web.Models.Productivity>
 
 @{
     ViewData["Title"] = "Create";
@@ -11,36 +11,37 @@
 <form asp-action="Create">
     <div>
         <a> Monthly</a>
-    
+
     </div>
-   
+
     <div class="form-group">
         <thead>
-    <table class="table">
-   
-            <tr>
-                <div class="form-group">
-                <th>     <a> SEC Name</a> </th>
-                </div >
-                <div class="form-group">
-                <th> <a>County </a> </th></div>
+            <table class="table">
 
-                <th> <a>Planned Days </a> </th>
-                <th> <a>Task Plan</a> </th>
-                <th> <a>Mentor Plan</a> </th>
+                <tr>
+                    <div class="form-group">
+                    <th>     <a> SEC Name</a> </th>
+    </div>
+    <div class="form-group">
+        <th> <a>County </a> </th>
+    </div>
 
-                <th> <a>Acheved Days </a> </th>
-                <th> <a>Task Acheved</a> </th>
-                <th> <a>Mentor Acheved</a> </th>
+    <th> <a>Planned Days </a> </th>
+    <th> <a>Task Plan</a> </th>
+    <th> <a>Mentor Plan</a> </th>
 
-
-                <th><a>ContractorId_FK</a>  </th>
-                <th></th>
-            </tr>
-        </thead>
+    <th> <a>Acheved Days </a> </th>
+    <th> <a>Task Acheved</a> </th>
+    <th> <a>Mentor Acheved</a> </th>
 
 
-        <tbody>
+    <th><a>ContractorId_FK</a>  </th>
+    <th></th>
+    </tr>
+    </thead>
+
+
+    <tbody>
 
 
             @{
@@ -48,48 +49,48 @@
             }
             @foreach (var item in Model)
             {
-                <tr>
-                    <div>
-                    <th> @item.SECName</th>
-                    </div>
+            <tr>
+                <div>
+                <th>                  
+                        <input asp-for="@Model[i].SECName " value=@item.SECName type="text"  />
+                </th>
 
-                    <div class="form-group">
-                    <th> @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
-                    </div>
+                </div>
 
-                    <div>
-                    <th>
-                       @Html.DropDownListFor(Model=>Model[i].PlannedDays, ViewBag.SelectPlanDay as SelectList, " ")
-                   </th>
-                    </div>
-                    <div>
-                    <th>
-                     @Html.DropDownListFor(Model => Model[i].Task_P, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
-                    </th>
-                    </div>
-                    <div>  <th><input asp-for="@Model[i].CounryMentor_P" value=@User.Identity.Name class="form-control" />   </th>  </div>
-                    <div>
-                    <th>
-                         @Html.DropDownListFor(Model => Model[i].AchevedDays, ViewBag.SelectPlanDay as SelectList, " ")
-                    </th></div>
+                <div class="form-group">
+                <th> @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
+                </div>
+
                 <div>
                 <th>
-                        @Html.DropDownListFor(Model => Model[i].Tasks_A, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
+                            @Html.DropDownListFor(Model => Model[i].PlannedDays, ViewBag.SelectPlanDay as SelectList, " ")
+                </th>
+                </div>
+                <div>
+                <th>
+                            @Html.DropDownListFor(Model => Model[i].Task_P, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
+                </th>
+                </div>
+                <div>
+                <th><input asp-for="@Model[i].CounryMentor_P" value=@User.Identity.Name class="form-control" />   </th>  </div>
+                <div>
+                <th>
+                            @Html.DropDownListFor(Model => Model[i].AchevedDays, ViewBag.SelectPlanDay as SelectList, " ")
+                </th></div>
+                <div>
+                <th>
+                            @Html.DropDownListFor(Model => Model[i].Tasks_A, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
                 </th>
                 </div>
 
                 <div>
                 <th> <input asp-for="@Model[i].CounryMentor_A " value=@User.Identity.Name class="form-control" /> </th></div>
 
+                <div>
+               
 
-
-                    <div>
-                    <th>
-                        <input asp-for="@Model[i].CounryMentor_P " value=@User.Identity.Name class="form-control" />
-                        <span asp-validation-for="@Model[i].ContractorId_FK" class="text-danger"></span>
-                    </th>
-                    </div>
-                </tr>
+                </div>
+            </tr>
 
                 i = i + 1;
 
@@ -97,7 +98,7 @@
 
 
 
-        </tbody>
+    </tbody>
 
     </table>
 
