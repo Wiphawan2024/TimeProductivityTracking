@@ -18,11 +18,25 @@ namespace TimeProductivityTracking.web.Controllers
         {
             _context = context;
         }
-
+     
         // GET: Productivities
         public async Task<IActionResult> Index()
         {
             return View(await _context.Productivities.ToListAsync());
+        }
+        public IActionResult Chart()
+        {
+            // Sample Data
+            List<string> months = new List<string> { "January 2025", "February 2025", "March 2025", "April 2025", "May 2025", "June 2025" };
+            List<int> plannedDays = new List<int> { 20, 18, 22, 25, 20, 21 };
+            List<int> achievedDays = new List<int> { 18, 15, 20, 23, 19, 20 };
+
+            // Pass Data to ViewBag
+            ViewBag.Months = months;
+            ViewBag.PlannedDays = plannedDays;
+            ViewBag.AchievedDays = achievedDays;
+
+            return View();
         }
 
         // GET: Productivities/Details/5
@@ -46,7 +60,19 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
+            DateTime month;
 
+            // Generate a list of months
+            List<SelectListItem> months = Enumerable.Range(1, 12).Select(i => new SelectListItem
+            {
+                Value = i.ToString(),
+                Text = new DateTime(2022, i, 1).ToString("MMMM") // Get month name
+            }).ToList();
+
+            // Pass to the ViewBag 
+            ViewBag.Months = months;
+         
+          
             var user=_context.Users.FirstOrDefault(u=>u.Email==User.Identity.Name);
             if (user != null)
             {
@@ -61,7 +87,9 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 var product = new Productivity
                 {
-                    Monthly = DateTime.Now,
+                  
+                    Date=DateTime.Now,
+                 
                     SECName = item.SECName
 
                 };
@@ -101,7 +129,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
+        public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
       {
 
 
@@ -109,14 +137,23 @@ namespace TimeProductivityTracking.web.Controllers
             {
 
                 int i = 0;
-                
+
+                foreach (var item in productivities)
+                        {
+                        item.Date = DateTime.Now;
+
+                    // Convert month number to month name + year 2025
+                    if (!string.IsNullOrEmpty(SelectedMonth) && int.TryParse(SelectedMonth, out int monthNumber) && monthNumber >= 1 && monthNumber <= 12)
+                    {
+                        item.Monthly = new DateTime(2025, monthNumber, 1).ToString("MMMM yyyy"); // Example: "January 2025"
+                    }
+                    else
+                    {
+                        item.Monthly = DateTime.Now.ToString("MMMM yyyy"); // Default to current month + year 2025
+                    }
                 
 
-                    foreach (var item in productivities)
-                        {
-                           
-                        item.Monthly = DateTime.Now;
-                        item.SECName = productivities[i].SECName;
+                item.SECName = productivities[i].SECName;
                         item.County = productivities[i].County;
                         item.PlannedDays = productivities[i].PlannedDays;
                         item.Task_P = productivities[i].Task_P;
@@ -226,5 +263,16 @@ namespace TimeProductivityTracking.web.Controllers
         {
             return _context.Productivities.Any(e => e.Id == id);
         }
+
+        //  Helper method to generate month list
+        private List<SelectListItem> GetMonthList()
+        {
+            return Enumerable.Range(1, 12).Select(i => new SelectListItem
+            {
+                Value = i.ToString(), // Stores month number (1-12)
+                Text = new DateTime(2025, i, 1).ToString("MMMM yyyy") // Displays month + year (e.g., "January 2025")
+            }).ToList();
+        }
+
     }
 }

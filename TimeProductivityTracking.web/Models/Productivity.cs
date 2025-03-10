@@ -9,10 +9,10 @@ namespace TimeProductivityTracking.web.Models
     {
 
         public int Id { get; set; }
-        [DisplayName("Monthly")]
+        [DisplayName("Date")]
         [DataType(DataType.Date)]
-
-        public DateTime? Monthly { get; set; }
+        public DateTime? Date { get; set; }
+        public string? Monthly { get; set; }
         [DisplayName("SEC Name")]
         public string SECName { get; set; }
         [DisplayName("County")]

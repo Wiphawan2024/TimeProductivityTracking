@@ -10,9 +10,14 @@
 
 <form asp-action="Create">
     <div>
-        <a> Monthly</a>
+        <label>Monthly</label>
 
+        @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Choose Month", new { @class = "form-control" })
     </div>
+
+
+
+
 
     <div class="form-group">
         <thead>
@@ -25,21 +30,15 @@
     <div class="form-group">
         <th> <a>County </a> </th>
     </div>
-
     <th> <a>Planned Days </a> </th>
     <th> <a>Task Plan</a> </th>
     <th> <a>Mentor Plan</a> </th>
-
     <th> <a>Acheved Days </a> </th>
     <th> <a>Task Acheved</a> </th>
     <th> <a>Mentor Acheved</a> </th>
-
-
-    <th><a>ContractorId_FK</a>  </th>
     <th></th>
     </tr>
     </thead>
-
 
     <tbody>
 
@@ -49,16 +48,16 @@
             }
             @foreach (var item in Model)
             {
-            <tr>
+            <tr>     
                 <div>
                 <th>                  
                         <input asp-for="@Model[i].SECName " value=@item.SECName type="text"  />
                 </th>
-
                 </div>
 
                 <div class="form-group">
-                <th> @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
+                <th> 
+                            @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
                 </div>
 
                 <div>
@@ -87,8 +86,7 @@
                 <th> <input asp-for="@Model[i].CounryMentor_A " value=@User.Identity.Name class="form-control" /> </th></div>
 
                 <div>
-               
-
+                      
                 </div>
             </tr>
 
