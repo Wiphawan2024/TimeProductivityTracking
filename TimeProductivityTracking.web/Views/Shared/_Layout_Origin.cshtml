@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Diagnostics;
@@ -12,10 +12,10 @@ namespace TimeProductivityTracking.web.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ProductivitiesContext _context;
-        private readonly UserManager<IdentityAuthUser> _userManager;
+        private readonly UserManager<IdentityAuthUser> _userManager;  
 
 
-        public HomeController(ILogger<HomeController> logger, UserManager<IdentityAuthUser> userManager
+        public HomeController(ILogger<HomeController> logger , UserManager<IdentityAuthUser> userManager
             , ProductivitiesContext context)
         {
             _logger = logger;
@@ -23,14 +23,22 @@ namespace TimeProductivityTracking.web.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        private async Task<IdentityAuthUser>GetLoggedInUser()
+        {
+            var user=await _userManager.GetUserAsync(User);
+            if (user==null)
+            {
+                RedirectToPage("/Account/Login", new { are = "Identity" });
+            }
+        }
+        public async  Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
 
 
             if (user == null)
             {
-
+               
                 ViewBag.Message = "Please Login to system. ";
                 return RedirectToPage("/Account/Login", new { area = "Identity" });
             }

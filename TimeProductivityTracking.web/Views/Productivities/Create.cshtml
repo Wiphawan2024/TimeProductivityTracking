@@ -3,19 +3,24 @@
 @{
     ViewData["Title"] = "Create";
 }
-<h1>Create</h1>
-<h4>Productivities</h4>
+
+<h4> Create Productivities </h4> 
+
+
+
 <hr />
 
 
 <form asp-action="Create">
-    <div>
-        <label>Monthly</label>
 
-        @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Choose Month", new { @class = "form-control" })
-    </div>
+    <div class="mb-3">
+        <label for="SelectedMonth" class="form-label">Select a Month</label>
+        <a class="dropdown-container">
+         @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Please Select a Month",
+                     new { @class = "form-control dropdown-custom monthly-input", required = "required" })
 
 
+        </a> </div>
 
 
 
@@ -31,8 +36,8 @@
         <th> <a>County </a> </th>
     </div>
     <th> <a>Planned Days </a> </th>
-    <th> <a>Task Plan</a> </th>
-    <th> <a>Mentor Plan</a> </th>
+    <th> <a>Task Planned</a> </th>
+    <th> <a>Mentor Planned</a> </th>
     <th> <a>Acheved Days </a> </th>
     <th> <a>Task Acheved</a> </th>
     <th> <a>Mentor Acheved</a> </th>
@@ -48,52 +53,37 @@
             }
             @foreach (var item in Model)
             {
-            <tr>     
-                <div>
-                <th>                  
-                        <input asp-for="@Model[i].SECName " value=@item.SECName type="text"  />
+            <tr>
+                <th><input asp-for="@Model[i].SECName" value="@item.SECName" type="text" class="form-control sec-name-input" required title="@item.SECName" />  </th>
+        
+                <th class="dropdown-container">
+                        @Html.DropDownListFor(Model => Model[i].County,
+                                 new SelectList(Enum.GetValues(typeof(Counties))),
+                                 "Select ..",
+                                 new { @class = "form-control dropdown-custom", required = "required" })
                 </th>
-                </div>
+                
+                <th> <input asp-for="@Model[i].PlannedDays" value="0.5" class="form-control short-input" required /> </th>
+                <th class="dropdown-container"> 
+                    @Html.DropDownListFor(Model => Model[i].Task_P, 
+                        new SelectList(Enum.GetValues(typeof(Tasks))), 
+                        "Select ..", 
+                        new { @class = "form-control dropdown-custom", required = "required" }) </th>
+               
+                <th> <input asp-for="@Model[i].CounryMentor_P" value="@User.Identity.Name" class="form-control" required /> </th>
+                <th> <input asp-for="@Model[i].AchevedDays" value="0.5" class="form-control short-input" required /> </th>
 
-                <div class="form-group">
-                <th> 
-                            @Html.DropDownListFor(Model => Model[i].County, new SelectList(Enum.GetValues(typeof(Counties))))</th>
-                </div>
-
-                <div>
-                <th>
-                            @Html.DropDownListFor(Model => Model[i].PlannedDays, ViewBag.SelectPlanDay as SelectList, " ")
+                <th class="dropdown-container">
+                        @Html.DropDownListFor(Model => Model[i].Tasks_A,
+                        new SelectList(Enum.GetValues(typeof(Tasks))), 
+                        "Select ..", 
+                        new { @class = "form-control dropdown-custom",  required = "required" }) 
                 </th>
-                </div>
-                <div>
-                <th>
-                            @Html.DropDownListFor(Model => Model[i].Task_P, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
-                </th>
-                </div>
-                <div>
-                <th><input asp-for="@Model[i].CounryMentor_P" value=@User.Identity.Name class="form-control" />   </th>  </div>
-                <div>
-                <th>
-                            @Html.DropDownListFor(Model => Model[i].AchevedDays, ViewBag.SelectPlanDay as SelectList, " ")
-                </th></div>
-                <div>
-                <th>
-                            @Html.DropDownListFor(Model => Model[i].Tasks_A, new SelectList(Enum.GetValues(typeof(Tasks))), "Select ..") <br /><br />
-                </th>
-                </div>
 
-                <div>
-                <th> <input asp-for="@Model[i].CounryMentor_A " value=@User.Identity.Name class="form-control" /> </th></div>
-
-                <div>
-                      
-                </div>
+                <th> <input asp-for="@Model[i].CounryMentor_A" value="@User.Identity.Name" class="form-control" required /> </th>
             </tr>
-
-                i = i + 1;
-
+                i++;
             }
-
 
 
     </tbody>
@@ -110,8 +100,6 @@
 </form>
 
 
-
-<a asp-action="Index">Back to List</a>
 
 
 @section Scripts {

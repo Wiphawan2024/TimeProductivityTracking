@@ -54,15 +54,15 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("SECContractId,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
+        public async Task<IActionResult> Create([Bind("SECContractId,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract SECContract)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sECContract);
+                _context.Add(SECContract);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(sECContract);
+            return View(SECContract);
         }
 
         // GET: SECContracts/Edit/5
@@ -86,9 +86,9 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("SECContract,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract sECContract)
+        public async Task<IActionResult> Edit(int id, [Bind("SECContractId,SECName,County,Address,PrimaryContract,Phone,Email")] SECContract SecContract)
         {
-            if (id != sECContract.SECContractId)
+            if (id != SecContract.SECContractId)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 try
                 {
-                    _context.Update(sECContract);
+                    _context.Update(SecContract);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SECContractExists(sECContract.SECContractId))
+                    if (!SECContractExists(SecContract.SECContractId))
                     {
                         return NotFound();
                     }
@@ -113,7 +113,7 @@ namespace TimeProductivityTracking.web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sECContract);
+            return View(SecContract);
         }
 
         // GET: SECContracts/Delete/5

@@ -1,86 +1,56 @@
 ﻿@model IEnumerable<TimeProductivityTracking.web.Models.Productivity>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Productivity Data";
 }
 
-<h1>Index</h1>
+<h2>Productivity Data</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<!-- Dropdown to Select Month -->
+<form method="get" action="@Url.Action("Index")">
+    <label for="selectedMonth">Select Month:</label>
+    <select id="selectedMonth" name="selectedMonth" onchange="this.form.submit()">
+        <option value="">-- Select Month --</option>
+        @foreach (var month in ViewBag.Months)
+        {
+            <option value="@month" selected="@(month == Context.Request.Query["selectedMonth"] ? "selected" : null)">
+                @month
+            </option>
+        }
+    </select>
+</form>
+
+<!-- Display Table -->
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Monthly)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.SECName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.County)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PlannedDays)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Task_P)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CounryMentor_P)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AchevedDays)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tasks_A)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CounryMentor_A)
-            </th>
-        
-            <th></th>
+            <th>Month</th>
+            <th>SEC Name</th>
+            <th>County</th>
+            <th>Planned Days</th>
+            <th>Achieved Days</th>
+            <th>Task</th>
+            <th>Mentor</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Monthly)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SECName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.County)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlannedDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Task_P)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CounryMentor_P)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AchevedDays)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tasks_A)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CounryMentor_A)
-            </td>
-           
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Monthly</td>
+                <td>@item.SECName</td>
+                <td>@item.County</td>
+                <td>@item.PlannedDays</td>
+                <td>@item.AchevedDays</td>
+                <td>@item.Task_P</td>
+                <td>@item.CounryMentor_A</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = item.Id })">Edit</a> |
+                    <a href="@Url.Action("Details", new { id = item.Id })">Details</a> |
+                    <a href="@Url.Action("Delete", new { id = item.Id })" onclick="return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

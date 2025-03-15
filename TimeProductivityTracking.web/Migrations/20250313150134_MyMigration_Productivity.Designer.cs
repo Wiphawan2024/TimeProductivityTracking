@@ -12,8 +12,8 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250307152641_MigrationV1")]
-    partial class MigrationV1
+    [Migration("20250313150134_MyMigration_Productivity")]
+    partial class MyMigration_Productivity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,23 +24,6 @@ namespace TimeProductivityTracking.web.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.Contractor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contractor", (string)null);
-                });
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivity", b =>
                 {
@@ -53,9 +36,6 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<int?>("AchevedDays")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ContractorID")
-                        .HasColumnType("int");
-
                     b.Property<string>("CounryMentor_A")
                         .HasColumnType("nvarchar(max)");
 
@@ -65,13 +45,13 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<int?>("County")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Monthly")
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PlannedDays")
-                        .HasColumnType("int");
+                    b.Property<string>("Monthly")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SECContractId")
+                    b.Property<int?>("PlannedDays")
                         .HasColumnType("int");
 
                     b.Property<string>("SECName")
@@ -85,10 +65,6 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ContractorID");
-
-                    b.HasIndex("SECContractId");
 
                     b.ToTable("Productivities", (string)null);
                 });
@@ -186,29 +162,6 @@ namespace TimeProductivityTracking.web.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserInfo", (string)null);
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivity", b =>
-                {
-                    b.HasOne("TimeProductivityTracking.web.Models.Contractor", "Contractor")
-                        .WithMany("Productivities")
-                        .HasForeignKey("ContractorID");
-
-                    b.HasOne("TimeProductivityTracking.web.Models.SECContract", null)
-                        .WithMany("Productivities")
-                        .HasForeignKey("SECContractId");
-
-                    b.Navigation("Contractor");
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.Contractor", b =>
-                {
-                    b.Navigation("Productivities");
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.SECContract", b =>
-                {
-                    b.Navigation("Productivities");
                 });
 #pragma warning restore 612, 618
         }

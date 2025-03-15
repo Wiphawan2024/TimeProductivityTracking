@@ -20,21 +20,69 @@ namespace TimeProductivityTracking.web.Controllers
         }
      
         // GET: Productivities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string selectedMonth)
         {
+          
+            //Get monts from database
+            ViewBag.Months=await _context.Productivities
+                .Select(p=>p.Monthly).Distinct().OrderBy(m=>m)
+                .ToListAsync();
+            //Fetch productivities based on the selected month
+            var productivities = _context.Productivities.AsQueryable();
+            if (!string.IsNullOrEmpty(selectedMonth))
+            {
+                productivities = productivities.Where(p => p.Monthly == selectedMonth);
+
+            }
             return View(await _context.Productivities.ToListAsync());
         }
         public IActionResult Chart()
         {
-            // Sample Data
-            List<string> months = new List<string> { "January 2025", "February 2025", "March 2025", "April 2025", "May 2025", "June 2025" };
-            List<int> plannedDays = new List<int> { 20, 18, 22, 25, 20, 21 };
-            List<int> achievedDays = new List<int> { 18, 15, 20, 23, 19, 20 };
+            /*
 
-            // Pass Data to ViewBag
-            ViewBag.Months = months;
-            ViewBag.PlannedDays = plannedDays;
-            ViewBag.AchievedDays = achievedDays;
+            // Fetch data from database (replace with your actual database model)
+            var productivityData = _context.Productivities
+                .Where(p => p.PlannedDays != null && p.AchevedDays != null) // Ensure data exists
+                .Select(p => new
+                {
+                    SECName = p.SECName,
+                    PlannedDays = p.PlannedDays ?? 0,
+                    AchievedDays = p.AchevedDays ?? 0
+                })
+                .ToList();
+
+            if (productivityData.Count == 0)
+            {
+                return View("Error"); // Handle empty data scenario
+            }
+
+            // Pass data to ViewBag for the chart
+            ViewBag.SECNames = productivityData.Select(p => p.SECName).ToList();
+            ViewBag.PlannedDays = productivityData.Select(p => p.PlannedDays).ToList();
+            ViewBag.AchievedDays = productivityData.Select(p => p.AchievedDays).ToList();
+
+            return View();
+
+
+            */
+
+
+
+            // Sample Data: You can replace this with database data from _context.Productivities
+            var productivityData = new List<Productivity>
+        {
+            new Productivity { Monthly = "January", PlannedDays = 20, AchevedDays = 18 },
+            new Productivity { Monthly = "February", PlannedDays = 18, AchevedDays = 20 },
+            new Productivity { Monthly = "March", PlannedDays = 22, AchevedDays = 20 },
+            new Productivity { Monthly = "April", PlannedDays = 25, AchevedDays = 23 },
+            new Productivity { Monthly = "May", PlannedDays = 20, AchevedDays = 25 },
+            new Productivity { Monthly = "June", PlannedDays = 21, AchevedDays = 30 }
+        };
+
+            // Extracting Data for Chart.js
+            ViewBag.Months = productivityData.ConvertAll(m => m.Monthly);
+            ViewBag.PlannedDays = productivityData.ConvertAll(p => p.PlannedDays ?? 0);
+            ViewBag.AchievedDays = productivityData.ConvertAll(a => a.AchevedDays ?? 0);
 
             return View();
         }
@@ -114,7 +162,7 @@ namespace TimeProductivityTracking.web.Controllers
                 new SelectDays { id=8,name="Choie8",PlannedDay=0.7m},
                 new SelectDays { id=9,name="Choie9",PlannedDay=0.8m},
                 new SelectDays { id=10,name="Choie10",PlannedDay=0.9m},
-                new SelectDays { id=11,name="Choie11",PlannedDay=10},
+                new SelectDays { id=11,name="Choie11",PlannedDay=1.0m},
             };
 
             ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
@@ -135,7 +183,7 @@ namespace TimeProductivityTracking.web.Controllers
 
             if (ModelState.IsValid)
             {
-
+               
                 int i = 0;
 
                 foreach (var item in productivities)
@@ -170,7 +218,7 @@ namespace TimeProductivityTracking.web.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(productivities);
+            return RedirectToAction(nameof(Index));
         }
 
 
@@ -197,7 +245,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] Productivity productivities)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] Productivity productivities)
         {
             if (id != productivities.Id)
             {

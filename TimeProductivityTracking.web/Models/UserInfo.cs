@@ -32,6 +32,6 @@ namespace TimeProductivityTracking.web.Models
         public int RateID { get; set; }
         public int Register { get; set; } = 0;
     }
-    public enum Roles { Admin, Manager, HR, Member, User,Contractor }
+    public enum Roles { Admin, Manager, HR,Contractor }
 
 }

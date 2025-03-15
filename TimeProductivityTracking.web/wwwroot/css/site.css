@@ -20,3 +20,53 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Adjusts the width of the Monthly input field */
+.monthly-input {
+    width: 300px !important; /* Set to a more reasonable size */
+    max-width: 100%; /* Ensures responsiveness */
+}
+.sec-name-input {
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.short-input {
+    width: 80px;
+}
+
+/*logo*/
+.navbar-brand img {
+    margin-right: 10px;
+    border-radius: 5px; /* Optional rounded corners */
+}
+
+
+
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.dropdown-custom {
+    appearance: none; /* Remove default arrow */
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 30px; /* Space for the caret */
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 10px center;
+    background-size: 14px;
+}
+
+
+.caret {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    font-size: 16px;
+    color: #555;
+}

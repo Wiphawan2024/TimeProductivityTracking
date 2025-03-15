@@ -12,11 +12,11 @@ builder.Services.AddDefaultIdentity<IdentityAuthUser>
     .AddRoles<IdentityRole>() // Add role 
     .AddEntityFrameworkStores<IdentityAuthContext>();
 
+
 //1. Add connect database
 
 builder.Services.AddDbContext<ProductivitiesContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProductivitiesContext") ?? throw new InvalidOperationException("Connection string 'ProductivitiesContext' not found.")));
-
 
 
 builder.Services.AddControllersWithViews();
@@ -27,6 +27,8 @@ using (var scope = app.Services.CreateScope())
 {
     var service=scope.ServiceProvider;
     DbInitializer.Initializer(service); //Initialize SEC Contracts
+
+    await SeedDBInitialize.InitializeAsync(service);
 }
 
     // Configure the HTTP request pipeline.

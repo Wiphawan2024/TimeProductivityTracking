@@ -6,22 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TimeProductivityTracking.web.Migrations
 {
     /// <inheritdoc />
-    public partial class Migration_Productivity : Migration
+    public partial class MyMigration_Productivity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Contractor",
+                name: "Productivities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Monthly = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SECName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    County = table.Column<int>(type: "int", nullable: true),
+                    PlannedDays = table.Column<int>(type: "int", nullable: true),
+                    Task_P = table.Column<int>(type: "int", nullable: true),
+                    CounryMentor_P = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AchevedDays = table.Column<int>(type: "int", nullable: true),
+                    Tasks_A = table.Column<int>(type: "int", nullable: true),
+                    CounryMentor_A = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Contractor", x => x.Id);
+                    table.PrimaryKey("PK_Productivities", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -74,49 +83,6 @@ namespace TimeProductivityTracking.web.Migrations
                 {
                     table.PrimaryKey("PK_UserInfo", x => x.UserId);
                 });
-
-            migrationBuilder.CreateTable(
-                name: "Productivities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Monthly = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SECName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    County = table.Column<int>(type: "int", nullable: true),
-                    PlannedDays = table.Column<int>(type: "int", nullable: true),
-                    Task_P = table.Column<int>(type: "int", nullable: true),
-                    CounryMentor_P = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AchevedDays = table.Column<int>(type: "int", nullable: true),
-                    Tasks_A = table.Column<int>(type: "int", nullable: true),
-                    CounryMentor_A = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContractorID = table.Column<int>(type: "int", nullable: true),
-                    SECContractId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Productivities", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Productivities_Contractor_ContractorID",
-                        column: x => x.ContractorID,
-                        principalTable: "Contractor",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Productivities_SECContract_SECContractId",
-                        column: x => x.SECContractId,
-                        principalTable: "SECContract",
-                        principalColumn: "SECContractId");
-                });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Productivities_ContractorID",
-                table: "Productivities",
-                column: "ContractorID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Productivities_SECContractId",
-                table: "Productivities",
-                column: "SECContractId");
         }
 
         /// <inheritdoc />
@@ -129,13 +95,10 @@ namespace TimeProductivityTracking.web.Migrations
                 name: "Rate");
 
             migrationBuilder.DropTable(
-                name: "UserInfo");
-
-            migrationBuilder.DropTable(
-                name: "Contractor");
-
-            migrationBuilder.DropTable(
                 name: "SECContract");
+
+            migrationBuilder.DropTable(
+                name: "UserInfo");
         }
     }
 }

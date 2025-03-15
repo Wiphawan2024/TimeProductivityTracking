@@ -146,19 +146,16 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
 
                     var userInfo = await _context.Users
                         .FirstOrDefaultAsync(r=> r.Email==Input.Email);
+                   
+                    // Update Register (wiphawan)
                     if (userInfo != null)
                     {
                         userInfo.Register = 1;
                      
                         await _context.SaveChangesAsync();
-                      
-
+           
                     }
-                  
-
-                    
-
-
+                 
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -202,5 +199,7 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<IdentityAuthUser>)_userStore;
         }
+
+
     }
 }

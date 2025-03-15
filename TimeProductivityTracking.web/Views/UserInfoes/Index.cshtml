@@ -63,17 +63,49 @@
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a> |
-              @if (item.Register==0)
+                    @if (item.Register == 0)
                     {
-                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register User</a>
-
+                        <!-- Redirect to Register page with UserId as a query string -->
+                        <a class="nav-link text-dark"
+                           asp-area="Identity"
+                           asp-page="/Account/Register"
+                           asp-route-email="@item.Email"
+                           asp-route-roleName="@item.Role">
+                           Register User</a>
                     }
                     else
                     {
-                        <a>Registered </a>
-                    }
+                        <span id="registerStatus-@item.UserId">Registered</span>
+                        <!-- Hidden button to trigger AJAX on page load -->
+                        <button class="register-check"
+                                data-userid="@item.Email"
+                                data-rolename="@item.Role"
+                                hidden></button>
+                       
+                        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                        <script>
+                            $(document).ready(function () {
+                                $(".register-check").each(function () {
+                                    var userId = $(this).data("userid");
+                                    var roleName = $(this).data("rolename");
 
-           
+                                    $.ajax({
+                                        url: "/UserInfoes/CheckAndRegisterUser",  // Calls the new controller action
+                                        type: "POST",
+                                        data: { userId: userId, roleName: roleName }, // Pass both parameters
+                                        success: function (response) {
+                                            if (response.success) {
+                                                $("#registerStatus-" + userId).text("Registered & Synced");
+                                            }
+                                        },
+                                        error: function () {
+                                            console.error("Error checking user role.");
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    }
             </td>
         </tr>
 }

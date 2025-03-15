@@ -18,13 +18,13 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("County")]
         public Counties? County { get; set; }
         [DisplayName("Planned Days")]
-        public int? PlannedDays { get; set; }
+        public Decimal? PlannedDays { get; set; }
         [DisplayName("Task_P")]
         public Tasks? Task_P { get; set; }
         [DisplayName("Mentor")]
         public string? CounryMentor_P { get; set; }
 
-        public int? AchevedDays { get; set; }
+        public Decimal? AchevedDays { get; set; }
         public Tasks? Tasks_A { get; set; }
         public string? CounryMentor_A { get; set; }
     //    public int? ContractorID { get; set; }

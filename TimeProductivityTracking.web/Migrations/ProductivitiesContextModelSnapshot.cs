@@ -30,8 +30,8 @@ namespace TimeProductivityTracking.web.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("AchevedDays")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("AchevedDays")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("CounryMentor_A")
                         .HasColumnType("nvarchar(max)");
@@ -48,11 +48,8 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<string>("Monthly")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlannedDays")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SECContractId")
-                        .HasColumnType("int");
+                    b.Property<decimal?>("PlannedDays")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("SECName")
                         .IsRequired()
@@ -65,8 +62,6 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SECContractId");
 
                     b.ToTable("Productivities", (string)null);
                 });
@@ -164,18 +159,6 @@ namespace TimeProductivityTracking.web.Migrations
                     b.HasKey("UserId");
 
                     b.ToTable("UserInfo", (string)null);
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivity", b =>
-                {
-                    b.HasOne("TimeProductivityTracking.web.Models.SECContract", null)
-                        .WithMany("Productivities")
-                        .HasForeignKey("SECContractId");
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.SECContract", b =>
-                {
-                    b.Navigation("Productivities");
                 });
 #pragma warning restore 612, 618
         }
