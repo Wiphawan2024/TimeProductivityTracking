@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -22,70 +23,77 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index(string selectedMonth)
         {
-          
             //Get monts from database
             ViewBag.Months=await _context.Productivities
-                .Select(p=>p.Monthly).Distinct().OrderBy(m=>m)
+                .Where(p=>p.UserEmail==User.Identity.Name)
+                .Select(p=>p.Monthly)
+                .Distinct()
+                .OrderBy(m=>m)
                 .ToListAsync();
-            //Fetch productivities based on the selected month
+            
+            //If no month is selected, return an empty list
+            if (string.IsNullOrEmpty(selectedMonth))
+            {
+                return View(new List<Productivity>());// 
+            }
+
             var productivities = _context.Productivities.AsQueryable();
             if (!string.IsNullOrEmpty(selectedMonth))
             {
-                productivities = productivities.Where(p => p.Monthly == selectedMonth);
+                productivities = productivities.Where(p => p.Monthly == selectedMonth && p.UserEmail==User.Identity.Name);
 
             }
-            return View(await _context.Productivities.ToListAsync());
+            //Fetch and filter productivities based on the selected month
+            var productivitiesList = await _context.Productivities
+                .Where(p=>p.Monthly==selectedMonth && p.UserEmail==User.Identity.Name).ToListAsync();
+
+            return View(productivitiesList);
         }
-        public IActionResult Chart()
+
+
+        [Authorize]//Ensure only logged-in user
+
+        public async Task<IActionResult> Chart(string selectedSEC)
         {
-            /*
+            string userEmail=User.Identity.Name;
 
-            // Fetch data from database (replace with your actual database model)
-            var productivityData = _context.Productivities
-                .Where(p => p.PlannedDays != null && p.AchevedDays != null) // Ensure data exists
-                .Select(p => new
-                {
-                    SECName = p.SECName,
-                    PlannedDays = p.PlannedDays ?? 0,
-                    AchievedDays = p.AchevedDays ?? 0
-                })
-                .ToList();
+            // Get distinct SEC Names for dropdown
+            ViewBag.SECNames = await _context.Productivities
+                .Where(p=>p.UserEmail == userEmail)
+                .Select(p => p.SECName)
+                .Distinct()
+                .OrderBy(sec => sec)
+                .ToListAsync();
 
-            if (productivityData.Count == 0)
+            // If no SEC is selected, return empty chart data
+            if (string.IsNullOrEmpty(selectedSEC))
             {
-                return View("Error"); // Handle empty data scenario
+                ViewBag.ChartMonths = new List<string>();
+                ViewBag.ChartPlanned = new List<decimal>();
+                ViewBag.ChartAchieved = new List<decimal>();
+                return View();
             }
 
-            // Pass data to ViewBag for the chart
-            ViewBag.SECNames = productivityData.Select(p => p.SECName).ToList();
-            ViewBag.PlannedDays = productivityData.Select(p => p.PlannedDays).ToList();
-            ViewBag.AchievedDays = productivityData.Select(p => p.AchievedDays).ToList();
+            // Fetch and filter data based on SEC Name
+            var productivities = await _context.Productivities
+                .Where(p => p.SECName == selectedSEC && p.UserEmail==User.Identity.Name)
+                .OrderBy(p => p.Monthly)
+                .ToListAsync();
 
-            return View();
+            // Extract required data while keeping decimal values
+            ViewBag.ChartMonths = productivities.Select(p => p.Monthly).ToList();
+            ViewBag.ChartPlanned = productivities.Select(p => p.PlannedDays).ToList();
+            ViewBag.ChartAchieved = productivities.Select(p => p.AchevedDays).ToList();
 
-
-            */
-
-
-
-            // Sample Data: You can replace this with database data from _context.Productivities
-            var productivityData = new List<Productivity>
-        {
-            new Productivity { Monthly = "January", PlannedDays = 20, AchevedDays = 18 },
-            new Productivity { Monthly = "February", PlannedDays = 18, AchevedDays = 20 },
-            new Productivity { Monthly = "March", PlannedDays = 22, AchevedDays = 20 },
-            new Productivity { Monthly = "April", PlannedDays = 25, AchevedDays = 23 },
-            new Productivity { Monthly = "May", PlannedDays = 20, AchevedDays = 25 },
-            new Productivity { Monthly = "June", PlannedDays = 21, AchevedDays = 30 }
-        };
-
-            // Extracting Data for Chart.js
-            ViewBag.Months = productivityData.ConvertAll(m => m.Monthly);
-            ViewBag.PlannedDays = productivityData.ConvertAll(p => p.PlannedDays ?? 0);
-            ViewBag.AchievedDays = productivityData.ConvertAll(a => a.AchevedDays ?? 0);
+            // Log the extracted data for debugging
+            Console.WriteLine("ChartMonths: " + string.Join(", ", ViewBag.ChartMonths));
+            Console.WriteLine("ChartPlanned: " + string.Join(", ", ViewBag.ChartPlanned));
+            Console.WriteLine("ChartAchieved: " + string.Join(", ", ViewBag.ChartAchieved));
 
             return View();
         }
+
+
 
         // GET: Productivities/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -209,6 +217,7 @@ namespace TimeProductivityTracking.web.Controllers
                         item.AchevedDays = productivities[i].AchevedDays;
                         item.Tasks_A = productivities[i].Tasks_A;
                         item.CounryMentor_A = productivities[i].CounryMentor_A;
+                        item.UserEmail=User.Identity.Name;
                     i++;
                 }
 

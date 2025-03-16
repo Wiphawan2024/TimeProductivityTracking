@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Productivity Chart</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .chart-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        canvas {
+            height: 400px !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Planned Days vs Achieved Days</h2>
+
+        <!-- Debugging output to ensure data is passed correctly -->
+        @if (ViewBag.Months != null && ViewBag.PlannedDays != null && ViewBag.AchievedDays != null)
+        {
+            <p>Months: @string.Join(", ", ViewBag.Months)</p>
+            <p>Planned Days: @string.Join(", ", ViewBag.PlannedDays)</p>
+            <p>Achieved Days: @string.Join(", ", ViewBag.AchievedDays)</p>
+        }
+        else
+        {
+            <p class="text-danger">No data received from Controller.</p>
+        }
+
+        <div class="chart-container">
+            <canvas id="productivityChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var ctx = document.getElementById('productivityChart').getContext('2d');
+
+            var months = @Html.Raw(Json.Serialize(ViewBag.Months));
+            var plannedDays = @Html.Raw(Json.Serialize(ViewBag.PlannedDays));
+            var achievedDays = @Html.Raw(Json.Serialize(ViewBag.AchievedDays));
+
+            if (!months || months.length === 0) {
+                console.error("No data available for the chart.");
+                return;
+            }
+
+            var chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [
+                        {
+                            label: 'Planned Days',
+                            data: plannedDays,
+                            borderColor: 'blue',
+                            backgroundColor: 'rgba(0, 0, 255, 0.2)',
+                            fill: true
+                        },
+                        {
+                            label: 'Achieved Days',
+                            data: achievedDays,
+                            borderColor: 'green',
+                            backgroundColor: 'rgba(0, 255, 0, 0.2)',
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { title: { display: true, text: 'Month' } },
+                        y: { title: { display: true, text: 'Days' }, beginAtZero: true }
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

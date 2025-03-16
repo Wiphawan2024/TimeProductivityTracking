@@ -1,8 +1,9 @@
-﻿document.addEventListener("DOMContentLoaded", function () {
+﻿
+document.addEventListener("DOMContentLoaded", function () {
     var ctx = document.getElementById('productivityChart').getContext('2d');
 
     var chart = new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: JSON.parse(document.getElementById("chartMonths").value), // Dynamic Months
             datasets: [

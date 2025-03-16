@@ -27,17 +27,10 @@ namespace TimeProductivityTracking.web.Models
         public Decimal? AchevedDays { get; set; }
         public Tasks? Tasks_A { get; set; }
         public string? CounryMentor_A { get; set; }
-    //    public int? ContractorID { get; set; }
-     //   public Contractor Contractor { get; set; }
-
-
+        [DisplayName("User Email")]
+        public string? UserEmail { get; set; }
     }
-   // public class Contractor 
-  //  {
-   //     public int Id { get; set; }
-   //     public List<Productivity> Productivities { get; set; }= new List<Productivity>();   
-   // }
-   
+
     public enum Counties { Longford,Roscommon,Sligo,Donegal,Leitrim,Mayo,Meath,Wexford,Wicklow }
     public enum Tasks
     { [Description("New SEC Registered")] NewSECRegistered = 0,

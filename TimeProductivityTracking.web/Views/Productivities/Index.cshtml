@@ -5,7 +5,6 @@
 }
 
 <h2>Productivity Data</h2>
-
 <!-- Dropdown to Select Month -->
 <form method="get" action="@Url.Action("Index")">
     <label for="selectedMonth">Select Month:</label>
@@ -13,14 +12,23 @@
         <option value="">-- Select Month --</option>
         @foreach (var month in ViewBag.Months)
         {
-            <option value="@month" selected="@(month == Context.Request.Query["selectedMonth"] ? "selected" : null)">
+            <option value="@month" selected="@(month == Context.Request.Query["selectedMonth"].ToString() ? "selected" : null)">
                 @month
             </option>
         }
     </select>
 </form>
 
-<!-- Display Table -->
+<!-- Show message if no month is selected -->
+@if(!Model.Any())
+{
+    <p>Please select a month to display productivity data. </p>
+}
+else
+{
+    <!-- Display Table Only When Data Exists-->
+   
+
 <table class="table">
     <thead>
         <tr>
@@ -28,8 +36,9 @@
             <th>SEC Name</th>
             <th>County</th>
             <th>Planned Days</th>
+            <th>Tasks Planned</th>
             <th>Achieved Days</th>
-            <th>Task</th>
+            <th>Tasks Achieved</th>
             <th>Mentor</th>
             <th>Actions</th>
         </tr>
@@ -42,8 +51,9 @@
                 <td>@item.SECName</td>
                 <td>@item.County</td>
                 <td>@item.PlannedDays</td>
-                <td>@item.AchevedDays</td>
                 <td>@item.Task_P</td>
+                <td>@item.AchevedDays</td>
+                <td>@item.Tasks_A</td>
                 <td>@item.CounryMentor_A</td>
                 <td>
                     <a href="@Url.Action("Edit", new { id = item.Id })">Edit</a> |
@@ -54,3 +64,4 @@
         }
     </tbody>
 </table>
+}

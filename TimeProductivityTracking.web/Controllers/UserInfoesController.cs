@@ -18,14 +18,17 @@ namespace TimeProductivityTracking.web.Controllers
         private readonly ProductivitiesContext _context;
         private UserManager<IdentityAuthUser> _userManager;
         private RoleManager<IdentityRole> _roleManager;
-
+        private readonly ILogger<UserInfoesController> _logger;
         public UserInfoesController(ProductivitiesContext context
             , RoleManager<IdentityRole> roleManager
-            ,UserManager<IdentityAuthUser> userManager)
+            ,UserManager<IdentityAuthUser> userManager,
+            ILogger<UserInfoesController> logger)
         {
             _context = context;
             _roleManager = roleManager;
             _userManager = userManager;
+            _logger = logger;
+            
         }
 
         // GET: UserInfoes
@@ -66,7 +69,7 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID")] UserInfo userInfo)
+        public async Task<IActionResult> Create([Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register=0")] UserInfo userInfo)
         {
             ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName");
             if (ModelState.IsValid)
@@ -86,31 +89,40 @@ namespace TimeProductivityTracking.web.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            var user = await _userManager.FindByIdAsync(userId); // : Use FindByIdAsync 
+            var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
                 ModelState.AddModelError("", "User not found.");
                 return RedirectToAction(nameof(Index));
             }
 
-        
-            // Check if user already has the role
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                ModelState.AddModelError("", "Role does not exist.");
+                return RedirectToAction(nameof(Index));
+            }
+
             if (await _userManager.IsInRoleAsync(user, roleName))
             {
                 ModelState.AddModelError("", "User is already in this role.");
                 return RedirectToAction(nameof(Index));
             }
 
-            // Assign the role
             var result = await _userManager.AddToRoleAsync(user, roleName);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home"); // ✅ Redirect to Home after successful role assignment
+                _logger.LogInformation($"Successfully assigned role '{roleName}' to user '{user.UserName}'.");
+                return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Failed to assign role.");
+            _logger.LogError($"Failed to assign role '{roleName}' to user '{user.UserName}'. Errors: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             return RedirectToAction(nameof(Index));
         }
+
+
+    
+        [HttpPost]
         [HttpPost]
         public async Task<JsonResult> CheckAndRegisterUser(string userId, string roleName)
         {
@@ -119,39 +131,57 @@ namespace TimeProductivityTracking.web.Controllers
                 return Json(new { success = false, message = "User ID and Role Name are required." });
             }
 
-            // Find the user by Email (or use FindByIdAsync if using UserId)
-            var user = await _userManager.FindByEmailAsync(userId);
+            // Find the user in AspNetUsers table
+            var user = await _userManager.FindByIdAsync(userId) ?? await _userManager.FindByEmailAsync(userId);
             if (user == null)
             {
                 return Json(new { success = false, message = "User not found." });
             }
 
-            // Get all current roles assigned to the user
-            var currentRoles = await _userManager.GetRolesAsync(user);
-
-            // If the user already has the correct role, return success
-            if (currentRoles.Contains(roleName))
+            if (!await _roleManager.RoleExistsAsync(roleName))
             {
-                return Json(new { success = true, message = "User is already in the correct role." });
+                return Json(new { success = false, message = "Role not found." });
             }
 
-            // Remove the user from all current roles
+            // Remove current roles
+            var currentRoles = await _userManager.GetRolesAsync(user);
             var removeResult = await _userManager.RemoveFromRolesAsync(user, currentRoles);
             if (!removeResult.Succeeded)
             {
-                return Json(new { success = false, message = "Failed to remove existing roles." });
+                return Json(new { success = false, message = $"Failed to remove existing roles: {string.Join(", ", removeResult.Errors.Select(e => e.Description))}" });
             }
 
-            // Add user to the new role
+            // Assign new role
             var addResult = await _userManager.AddToRoleAsync(user, roleName);
-            if (addResult.Succeeded)
+            if (!addResult.Succeeded)
             {
-                return Json(new { success = true, message = "User role updated successfully." });
+                return Json(new { success = false, message = $"Failed to assign new role: {string.Join(", ", addResult.Errors.Select(e => e.Description))}" });
             }
-            else
+
+            // Update role in UserInfo table **without resetting Register**
+            var userInfo = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            if (userInfo != null)
             {
-                return Json(new { success = false, message = "Failed to assign new role." });
+                if (Enum.TryParse<Roles>(roleName, true, out var parsedRole))
+                {
+                    userInfo.Role = parsedRole;
+
+                    // **Prevent resetting Register field to 0**
+                    if (userInfo.Register == 0)
+                    {
+                        userInfo.Register = 1; // Mark as registered if not already
+                    }
+
+                    _context.Update(userInfo);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    return Json(new { success = false, message = "Invalid role name." });
+                }
             }
+
+            return Json(new { success = true, message = "User role updated successfully." });
         }
 
         public async Task<IActionResult> AddUserToRole(string userId, string roleName)
@@ -189,7 +219,9 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID")] UserInfo userInfo)
+
+        /*
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register")] UserInfo userInfo)
         {
             IdentityResult result;
             string role=userInfo.Role.ToString();   
@@ -237,6 +269,65 @@ namespace TimeProductivityTracking.web.Controllers
                 return NotFound();
             }
 
+            return View(userInfo);
+        }
+        */
+
+       
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register")] UserInfo userInfo)
+        {
+            if (id != userInfo.UserId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Retrieve the existing UserInfo record
+                    var existingUserInfo = await _context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.UserId == id);
+                    if (existingUserInfo == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Preserve Register value (don't reset it)
+                    userInfo.Register = existingUserInfo.Register;
+
+                    // Check if the role has changed
+                    if (existingUserInfo.Role != userInfo.Role)
+                    {
+                        // Get the user from AspNetUsers
+                        var user = await _userManager.FindByEmailAsync(userInfo.Email);
+                        if (user != null)
+                        {
+                            // Remove the old role
+                            var currentRoles = await _userManager.GetRolesAsync(user);
+                            await _userManager.RemoveFromRolesAsync(user, currentRoles);
+
+                            // Add the new role in AspNetUserRoles
+                            await _userManager.AddToRoleAsync(user, userInfo.Role.ToString());
+                        }
+                    }
+
+                    // Update UserInfo table
+                    _context.Update(userInfo);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserInfoExists(userInfo.UserId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
             return View(userInfo);
         }
 
