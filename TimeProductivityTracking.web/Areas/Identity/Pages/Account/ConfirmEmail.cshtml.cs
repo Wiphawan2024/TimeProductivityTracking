@@ -30,6 +30,8 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
         /// </summary>
         [TempData]
         public string StatusMessage { get; set; }
+        public string Email { get; set; } // Store email for redirect
+
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
             if (userId == null || code == null)
@@ -51,7 +53,10 @@ namespace TimeProductivityTracking.web.Areas.Identity.Pages.Account
             {
                 return BadRequest("Error confirming your email.");
             }
+            // Store email for redirect
+            Email = user.Email; //Store email
 
+           
 
             return Page();
         }

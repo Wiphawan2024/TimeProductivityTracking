@@ -6,3 +6,28 @@
 
 <h1>@ViewData["Title"]</h1>
 <partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<p>You will be redirected shortly...</p>
+
+<script>
+    setTimeout(function () {
+        fetch('@Url.Action("CheckAfterRegister", "UserInfoes")' + '?email=@Model.Email', {
+            method: 'GET'
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("CheckAfterRegister failed.");
+                }
+                return response.json(); //  Parse response as JSON
+            })
+            .then(data => {
+                console.log("Response from server:", data); //  Debugging log
+                if (data.success) {
+                    window.location.href = '@Url.Action("Index", "UserInfoes")'; //  Redirect on success
+                } else {
+                    console.error("CheckAfterRegister returned false.");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }, 3000); // Wait 3 seconds before calling
+</script>

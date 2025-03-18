@@ -69,9 +69,14 @@
                            asp-area="Identity"
                            asp-page="/Account/Register"
                            asp-route-email="@item.Email"
-                           asp-route-roleName="@item.Role">
+                           asp-route-roleName="@item.Role"
+                           data-email="@item.Email"
+                            data-userid="@item.UserId">
                             Register User
                         </a>
+
+
+
                     }
                     else
                     {
@@ -83,30 +88,9 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.UserId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a> |
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script>
-                        $(document).ready(function () {
-                            $(".register-check").each(function () {
-                                var userId = $(this).data("userid");
-                                var roleName = $(this).data("rolename");
+                <a asp-action="Delete" asp-route-id="@item.UserId">Delete</a> 
 
-                                $.ajax({
-                                    url: "/UserInfoes/CheckAndRegisterUser",  // Calls the new controller action
-                                    type: "POST",
-                                    data: { userId: userId, roleName: roleName }, // Pass both parameters
-                                    success: function (response) {
-                                        if (response.success) {
-                                            $("#registerStatus-" + userId).text("Registered & Synced");
-                                        }
-                                    },
-                                    error: function () {
-                                        console.error("Error checking user role.");
-                                    }
-                                });
-                            });
-                        });
-                    </script>
+                  
             </td>
 
         </tr>
@@ -114,3 +98,36 @@
 
     </tbody>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // ✅ Register User and Check After Register
+        $(".register-user").click(function (e) {
+            e.preventDefault();
+            var email = $(this).data("email");
+            var userId = $(this).data("userid");
+            var registerUrl = $(this).attr("href"); // Store original registration URL
+
+            // Redirect to the registration page
+            window.location.href = registerUrl;
+
+            // ✅ Call CheckAfterRegister after delay (5 seconds)
+            setTimeout(function () {
+                $.ajax({
+                    url: "/UserInfoes/CheckAfterRegister",
+                    type: "POST",
+                    data: { email: email },
+                    success: function (response) {
+                        if (response.success) {
+                            $("#registerStatus-" + userId).html("Registered & Synced");
+                        }
+                    },
+                    error: function () {
+                        console.error("Error checking registration status.");
+                    }
+                });
+            }, 5000);
+        });
+    });
+</script>

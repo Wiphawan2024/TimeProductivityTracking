@@ -121,8 +121,6 @@ namespace TimeProductivityTracking.web.Controllers
         }
 
 
-    
-        [HttpPost]
         [HttpPost]
         public async Task<JsonResult> CheckAndRegisterUser(string userId, string roleName)
         {
@@ -180,9 +178,58 @@ namespace TimeProductivityTracking.web.Controllers
                     return Json(new { success = false, message = "Invalid role name." });
                 }
             }
-
+            _logger.LogInformation($"User role updated successfully for {user.Email}");
             return Json(new { success = true, message = "User role updated successfully." });
         }
+
+        public async Task<IActionResult>CheckAfterRegister(string email)
+        {
+
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest("Invalid email.");
+            }
+
+            //Retrieve user information based on email
+            var userInfo = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (userInfo == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            try
+            {
+                //  Update the Register field if it’s not already set
+                if (userInfo.Register == 0)
+                {
+                    userInfo.Register = 1;
+                }
+
+                //  Update Role in AspNetUserRoles if changed
+                var user = await _userManager.FindByEmailAsync(userInfo.Email);
+                if (user != null)
+                {
+                    var currentRoles = await _userManager.GetRolesAsync(user);
+                    if (!currentRoles.Contains(userInfo.Role.ToString()))
+                    {
+                        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                        await _userManager.AddToRoleAsync(user, userInfo.Role.ToString());
+                    }
+                }
+
+                //  Save changes to database
+                _context.Update(userInfo);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error updating user: {ex.Message}");
+            }
+
+            return Ok(new { success = true }); //  Return JSON response for AJAX
+        }
+
+
 
         public async Task<IActionResult> AddUserToRole(string userId, string roleName)
         {
@@ -194,6 +241,9 @@ namespace TimeProductivityTracking.web.Controllers
             }
             return RedirectToAction(nameof(Index));
         }
+
+
+
 
 
         // GET: UserInfoes/Edit/5
@@ -219,61 +269,6 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        /*
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register")] UserInfo userInfo)
-        {
-            IdentityResult result;
-            string role=userInfo.Role.ToString();   
-
-            if (id != userInfo.UserId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(userInfo);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserInfoExists(userInfo.UserId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(userInfo);
-        }
-
-        // GET: UserInfoes/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var userInfo = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
-            if (userInfo == null)
-            {
-                return NotFound();
-            }
-
-            return View(userInfo);
-        }
-        */
-
-       
         public async Task<IActionResult> Edit(int id, [Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register")] UserInfo userInfo)
         {
             if (id != userInfo.UserId)
@@ -330,6 +325,25 @@ namespace TimeProductivityTracking.web.Controllers
             }
             return View(userInfo);
         }
+
+        // GET: Productivities/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.Users
+                .FirstOrDefaultAsync(m => m.UserId == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
 
         // POST: UserInfoes/Delete/5
         [HttpPost, ActionName("Delete")]
