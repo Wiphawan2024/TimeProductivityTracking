@@ -1,0 +1,44 @@
+﻿@model TimeProductivityTracking.web.Models.ProductivitySummaryViewModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>ProductivitySummaryViewModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="SecName" class="control-label"></label>
+                <input asp-for="SecName" class="form-control" />
+                <span asp-validation-for="SecName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Month" class="control-label"></label>
+                <input asp-for="Month" class="form-control" />
+                <span asp-validation-for="Month" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TotalAchevedDays" class="control-label"></label>
+                <input asp-for="TotalAchevedDays" class="form-control" />
+                <span asp-validation-for="TotalAchevedDays" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

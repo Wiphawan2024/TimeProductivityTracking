@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TimeProductivityTracking.web.Models.ProductivitySummaryViewModel>
+
+<form method="get">
+    <input type="text" name="userEmail" value="@ViewBag.UserEmail" placeholder="User Email" />
+
+    <select name="selectedMonth">
+        <option value="">All Months</option>
+        @foreach (var month in (ViewBag.AvailableMonths as List<string>) ?? new List<string>())
+        {
+            var selected = month == (ViewBag.SelectedMonth as string) ? "selected" : "";
+            <option value="@month" selected="@selected">@month</option>
+        }
+    </select>
+
+    <button type="submit">Filter</button>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Month</th>
+            <th>Contractor</th>
+            <th>SEC Name</th>
+            <th>Total Achieved Days</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    
+                    <td>@item.Month</td>
+                    <td>@item.FullName</td>
+                    <td>@item.SecName</td>
+                    <td>@item.TotalAchevedDays</td>
+
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">No data found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<tfoot>
+    <tr>
+        <td colspan="3"><strong>Total</strong></td>
+        <td><strong>@ViewBag.TotalAchievedDays</strong></td>
+    </tr>
+</tfoot>

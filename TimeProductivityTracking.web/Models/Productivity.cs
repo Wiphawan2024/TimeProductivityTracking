@@ -22,13 +22,18 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("Task_P")]
         public Tasks? Task_P { get; set; }
         [DisplayName("Mentor")]
-        public string? CounryMentor_P { get; set; }
+        public string? CountryMentor_P { get; set; }
 
         public Decimal? AchevedDays { get; set; }
         public Tasks? Tasks_A { get; set; }
-        public string? CounryMentor_A { get; set; }
+        public string? CountryMentor_A { get; set; }
         [DisplayName("User Email")]
         public string? UserEmail { get; set; }
+        [ForeignKey("Contractor")]
+        public int? ContractorId { get; set; }
+
+        public UserInfo? Contractor { get; set; }
+     
     }
 
     public enum Counties { Longford,Roscommon,Sligo,Donegal,Leitrim,Mayo,Meath,Wexford,Wicklow }
