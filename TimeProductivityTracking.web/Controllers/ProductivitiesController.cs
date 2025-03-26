@@ -25,6 +25,7 @@ namespace TimeProductivityTracking.web.Controllers
         {
             //Get monts from database
             ViewBag.Months=await _context.Productivities
+                .Include(p=>p.Contractor)
                 .Where(p=>p.UserEmail==User.Identity.Name)
                 .Select(p=>p.Monthly)
                 .Distinct()
@@ -40,11 +41,14 @@ namespace TimeProductivityTracking.web.Controllers
             var productivities = _context.Productivities.AsQueryable();
             if (!string.IsNullOrEmpty(selectedMonth))
             {
-                productivities = productivities.Where(p => p.Monthly == selectedMonth && p.UserEmail==User.Identity.Name);
+                productivities = productivities
+                    .Include(p => p.Contractor)
+                    .Where(p => p.Monthly == selectedMonth && p.UserEmail==User.Identity.Name);
 
             }
             //Fetch and filter productivities based on the selected month
             var productivitiesList = await _context.Productivities
+                .Include(p=>p.Contractor)
                 .Where(p=>p.Monthly==selectedMonth && p.UserEmail==User.Identity.Name).ToListAsync();
 
             return View(productivitiesList);
@@ -187,7 +191,13 @@ namespace TimeProductivityTracking.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
       {
-
+            var contractorId=0;
+            var currentUserEmail=User.Identity.Name;
+            var contractor=_context.Users.FirstOrDefault(u=>u.Email==currentUserEmail);
+            if (contractor!=null)
+            {
+                contractorId=contractor.UserId;
+            }
 
             if (ModelState.IsValid)
             {
@@ -207,17 +217,17 @@ namespace TimeProductivityTracking.web.Controllers
                     {
                         item.Monthly = DateTime.Now.ToString("MMMM yyyy"); // Default to current month + year 2025
                     }
-                
-
-                item.SECName = productivities[i].SECName;
+               
+                        item.SECName = productivities[i].SECName;
                         item.County = productivities[i].County;
                         item.PlannedDays = productivities[i].PlannedDays;
                         item.Task_P = productivities[i].Task_P;
-                        item.CounryMentor_P = productivities[i].CounryMentor_P;
+                        item.CountryMentor_P = productivities[i].CountryMentor_P;
                         item.AchevedDays = productivities[i].AchevedDays;
                         item.Tasks_A = productivities[i].Tasks_A;
-                        item.CounryMentor_A = productivities[i].CounryMentor_A;
+                        item.CountryMentor_A = productivities[i].CountryMentor_A;
                         item.UserEmail=User.Identity.Name;
+                        item.ContractorId = contractorId;
                     i++;
                 }
 
@@ -330,6 +340,8 @@ namespace TimeProductivityTracking.web.Controllers
                 Text = new DateTime(2025, i, 1).ToString("MMMM yyyy") // Displays month + year (e.g., "January 2025")
             }).ToList();
         }
+
+        
 
     }
 }

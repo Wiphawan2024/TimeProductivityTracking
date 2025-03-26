@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250325143701_AddUserInfo_contracor")]
+    partial class AddUserInfo_contracor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,7 +63,7 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<decimal?>("AchevedDays")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int>("ContractorId")
+                    b.Property<int>("ContractorUserId")
                         .HasColumnType("int");
 
                     b.Property<string>("CounryMentor_A")
@@ -96,9 +99,45 @@ namespace TimeProductivityTracking.web.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ContractorId");
+                    b.HasIndex("ContractorUserId");
 
-                    b.ToTable("Productivity", (string)null);
+                    b.ToTable("Productivities", (string)null);
+                });
+
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.ProductivitySummaryViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AvailableMonths")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SecName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SelectedMonth")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAchevedDays")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductivitySummaryViewModel");
                 });
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Rate", b =>
@@ -213,8 +252,8 @@ namespace TimeProductivityTracking.web.Migrations
                 {
                     b.HasOne("TimeProductivityTracking.web.Models.UserInfo", "Contractor")
                         .WithMany()
-                        .HasForeignKey("ContractorId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("ContractorUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Contractor");

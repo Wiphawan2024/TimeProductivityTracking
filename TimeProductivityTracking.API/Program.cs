@@ -1,15 +1,42 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using TimeProductivityTracking.web.Areas.Identity.Data;
+using TimeProductivityTracking.API.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddDbContext<APIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlServerOptions => sqlServerOptions.EnableRetryOnFailure())); // Enables retry logic for transient errors
+
+// Configure Database & Identity
+builder.Services.AddDbContext<APIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        b => b.MigrationsAssembly("TimeProductivityTracking.API"))); // Ensure EF migrations stay in API
+
+builder.Services.AddIdentity<IdentityAuthUser, IdentityRole>()
+    .AddEntityFrameworkStores<APIContext>()
+    .AddDefaultTokenProviders();
+
+// Enable CORS (if needed)
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -18,7 +45,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication(); // 🔥 Added for authentication support
 app.UseAuthorization();
+
+app.UseCors("AllowAll"); // 🔥 Added for frontend compatibility
 
 app.MapControllers();
 

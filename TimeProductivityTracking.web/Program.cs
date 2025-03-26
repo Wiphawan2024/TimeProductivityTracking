@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Areas.Identity.Data;
 using TimeProductivityTracking.web.Data;
+using DinkToPdf; //for pdf
+using DinkToPdf.Contracts;
+using System.Runtime.InteropServices;//for pdf
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString = builder.Configuration.GetConnectionString("IdentityAuthContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityAuthContextConnection' not found.");
@@ -11,6 +15,22 @@ builder.Services.AddDefaultIdentity<IdentityAuthUser>
     (options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>() // Add role 
     .AddEntityFrameworkStores<IdentityAuthContext>();
+
+// Manually load the wkhtmltox DLL
+// Set the correct DLL path
+var wkhtmltoxPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "wkhtmltopdf", "wkhtmltox.dll");
+if (File.Exists(wkhtmltoxPath))
+{
+    NativeLibrary.Load(wkhtmltoxPath);
+}
+else
+{
+    throw new Exception($"wkhtmltopdf DLL not found at {wkhtmltoxPath}");
+}
+
+// Register DinkToPdf service
+builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
+
 
 
 //1. Add connect database

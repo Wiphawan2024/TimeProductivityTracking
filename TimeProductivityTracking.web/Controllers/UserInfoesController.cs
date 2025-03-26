@@ -33,9 +33,9 @@ namespace TimeProductivityTracking.web.Controllers
 
         // GET: UserInfoes
         public async Task<IActionResult> Index()
-        {     
+        {     var users=_context.Users.Include(u=>u.Rate).ToList();
             
-            return View(await _context.Users.ToListAsync());
+            return View(users);
         }
 
         // GET: UserInfoes/Details/5

@@ -1,0 +1,38 @@
+﻿@model TimeProductivityTracking.web.Models.Invoice
+
+@{
+    ViewData["Title"] = "Invoice Details";
+}
+
+<h2>Invoice Details</h2>
+
+<table class="table">
+    <tr>
+        <th>Contractor:</th>
+        <td>@Model.Contractor.FName @Model.Contractor.LName</td>
+    </tr>
+    <tr>
+        <th>Month:</th>
+        <td>@Model.Month.ToString("MMMM yyyy")</td>
+    </tr>
+    <tr>
+        <th>Total Days Worked:</th>
+        <td>@Model.TotalDaysWorked</td>
+    </tr>
+    <tr>
+        <th>Daily Rate (€):</th>
+        <td>€250</td> <!-- Assuming fixed rate -->
+    </tr>
+    <tr>
+        <th>Total Payment (€):</th>
+        <td>@(Model.TotalDaysWorked * 250)</td>
+    </tr>
+    <tr>
+        <th>Created At:</th>
+        <td>@Model.CreatedAt.ToString("yyyy-MM-dd")</td>
+    </tr>
+</table>
+
+<p>
+    <a class="btn btn-secondary" asp-action="Index">Back to List</a>
+</p>

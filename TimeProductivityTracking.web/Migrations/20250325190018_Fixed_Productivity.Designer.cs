@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250325190018_Fixed_Productivity")]
+    partial class Fixed_Productivity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -98,7 +101,7 @@ namespace TimeProductivityTracking.web.Migrations
 
                     b.HasIndex("ContractorId");
 
-                    b.ToTable("Productivity", (string)null);
+                    b.ToTable("Productivities", (string)null);
                 });
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Rate", b =>
