@@ -1,20 +1,39 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿
+    @{
+        ViewData["Title"] = "Home";
+    }
 
-<div class="text-center">
- 
-
-    <div class="container text-center">
-        <div class="row align-items-center min-vh-100">
-            <div class="col-md-12">
-                <h1 class="display-4">Welcome to SEC</h1>
-                <p class="lead">Your one-stop solution for contract management & productivity tools.</p>
-              
-            </div>
+    <section class="hero"
+    <div class="hero" style="background: url('@Url.Content("~/images/bg.jpg")') no-repeat center center/cover;">
+        <div class="hero-content">
+            <h1>Welcome to SEC</h1>
+            <p>Your one-stop solution for contract management & productivity tools.</p>
+    
         </div>
     </div>
+    </section>
 
+
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-4 feature-box">
+                    <h2>🌱 Sustainable Energy</h2>
+                    <p>Empowering communities with renewable energy solutions.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <h2>🔍 Smart Contracts</h2>
+                    <p>Manage contracts efficiently with our intelligent tools.</p>
+                </div>
+                <div class="col-md-4 feature-box">
+                    <h2>⚡ Productivity Tools</h2>
+                    <p>Optimize your workflow with cutting-edge automation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
   
 </div>
