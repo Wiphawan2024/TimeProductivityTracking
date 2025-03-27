@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TimeProductivityTracking.web.ViewModels.ViewProductivities>
+
+<form method="get">
+
+
+
+</form>
+
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+           
+            <th>Month</th>
+            <th>Contractor</th>
+            <th>Total Days</th>
+            <th>Approval Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                  
+                    <td>@item.Month</td>
+                    <td>@item.FullName</td>
+                    <td>@item.TotalDays</td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-month="@item.Month"
+                           asp-route-ContractorId="@item.ContractorId">
+                           
+                            Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="3" class="text-center">No data found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<tfoot>
+  
+</tfoot>
