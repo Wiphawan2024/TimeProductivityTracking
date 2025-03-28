@@ -249,17 +249,20 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: UserInfoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName");
-            if (id == null)
-            {
-                return NotFound();
-            }
+      
 
             var userInfo = await _context.Users.FindAsync(id);
             if (userInfo == null)
             {
                 return NotFound();
             }
+            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName", userInfo.RateID);
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             ViewBag.HireDate=userInfo.HireDate;
             return View(userInfo);
         }
@@ -323,6 +326,7 @@ namespace TimeProductivityTracking.web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName", userInfo.RateID);
             return View(userInfo);
         }
 

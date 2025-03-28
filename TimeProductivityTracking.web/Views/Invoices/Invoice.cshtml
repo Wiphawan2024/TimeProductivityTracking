@@ -1,4 +1,4 @@
-﻿@model TimeProductivityTracking.web.Models.Invoice
+﻿@model TimeProductivityTracking.web.ViewModels.InvoiceViewModel
 
 <style>
     table, th, td {
@@ -21,8 +21,8 @@
 <div>
     <div class="invoice-header">INVOICE</div>
     <p>
-        <strong>Contractor:</strong> @Model.Contractor.FName @Model.Contractor.LName<br />
-        <strong>Email:</strong> @Model.Contractor.Email<br />
+        <strong>Contractor:</strong> @Model.ContractorName<br />
+        <strong>Email:</strong> @Model.ContractorEmail<br />
         <strong>Month:</strong> @Model.Month<br />
         <strong>Date:</strong> @Model.InvoiceDate.ToShortDateString()<br />
         <strong>Invoice No:</strong> @Model.InvoiceNumber

@@ -2,10 +2,10 @@
 
 #nullable disable
 
-namespace TimeProductivityTracking.API.Migrations
+namespace TimeProductivityTracking.web.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate4 : Migration
+    public partial class Fixed_UserInfo : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

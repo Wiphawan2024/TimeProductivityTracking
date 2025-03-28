@@ -33,14 +33,25 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<int>("ContractorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("InvoiceDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("Month")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("TotalDaysWorked")
-                        .HasColumnType("float");
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalHours")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -60,13 +71,13 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<decimal?>("AchevedDays")
                         .HasColumnType("decimal(5,2)");
 
-                    b.Property<int>("ContractorId")
+                    b.Property<int?>("ContractorId")
                         .HasColumnType("int");
 
-                    b.Property<string>("CounryMentor_A")
+                    b.Property<string>("CountryMentor_A")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CounryMentor_P")
+                    b.Property<string>("CountryMentor_P")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("County")
@@ -94,11 +105,14 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<string>("UserEmail")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("statusApproval")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContractorId");
 
-                    b.ToTable("Productivity", (string)null);
+                    b.ToTable("Productivities", (string)null);
                 });
 
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Rate", b =>
@@ -182,7 +196,8 @@ namespace TimeProductivityTracking.web.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("RateID")
+                    b.Property<int?>("RateID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("Register")
@@ -214,8 +229,7 @@ namespace TimeProductivityTracking.web.Migrations
                     b.HasOne("TimeProductivityTracking.web.Models.UserInfo", "Contractor")
                         .WithMany()
                         .HasForeignKey("ContractorId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Contractor");
                 });

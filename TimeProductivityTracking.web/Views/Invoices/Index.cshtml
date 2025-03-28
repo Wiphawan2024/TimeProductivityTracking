@@ -1,41 +1,39 @@
 ﻿@model IEnumerable<TimeProductivityTracking.web.Models.Invoice>
 
-@{
-    ViewData["Title"] = "Invoices";
-}
 
-<h2>Invoices</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Contractor</th>
-            <th>Month</th>
-            <th>Total Days Worked</th>
-            <th>Daily Rate (€)</th>
-            <th>Total Payment (€)</th>
-            <th>Created At</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var invoice in Model)
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Contractor</th>
+                <th>Email</th>
+                <th>Month</th>
+                <th>Invoice NO</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
         {
             <tr>
-                <td>@invoice.Contractor.FName @invoice.Contractor.LName</td>
-                <td>@invoice.Month.ToString("MMMM yyyy")</td>
-                <td>@invoice.TotalDaysWorked</td>
-                <td>€250</td> <!-- Assuming a fixed daily rate -->
-                <td>@(invoice.TotalDaysWorked * 250)</td>
-                <td>@invoice.CreatedAt.ToString("yyyy-MM-dd")</td>
+                <td>@item.Contractor.FName @item.Contractor.LName</td>
+                <td>@item.Contractor.Email</td>
+                <td>@item.Month</td>
+                <td>@item.InvoiceNumber</td>
                 <td>
-                    <a class="btn btn-info" asp-action="Details" asp-route-id="@invoice.Id">View Details</a>
+                    <a asp-action="Details"
+                       asp-route-id="@item.Id"
+                       asp-route-month="@item.Month"
+                       asp-route-ContractorId="@item.ContractorId">
+                        Details
+                    </a>
                 </td>
+
             </tr>
         }
-    </tbody>
-</table>
-
-<p>
-    <a class="btn btn-success" asp-action="GenerateInvoice" asp-route-month="@DateTime.Now.Month" asp-route-year="@DateTime.Now.Year">Generate Invoice</a>
-</p>
+        </tbody>
+        
+    </table>
+        
+        

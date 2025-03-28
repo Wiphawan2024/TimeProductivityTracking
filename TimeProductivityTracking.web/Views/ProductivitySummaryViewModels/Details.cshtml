@@ -1,36 +1,64 @@
-﻿@model TimeProductivityTracking.web.Models.ProductivitySummaryViewModel
+﻿@model IEnumerable<TimeProductivityTracking.web.Models.Productivity>
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Approve Productivity";
 }
 
-<h1>Details</h1>
+<h2 class="mb-4">Productivity Data</h2>
 
-<div>
-    <h4>ProductivitySummaryViewModel</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SecName)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SecName)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Month)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Month)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TotalAchevedDays)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TotalAchevedDays)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+@if (Model.Any())
+{
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Month</th>
+                <th>SEC Name</th>
+                <th>County</th>
+                <th>Planned Days</th>
+                <th>Tasks Planned</th>
+                <th>Achieved Days</th>
+                <th>Tasks Achieved</th>
+                <th>Mentor</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Monthly</td>
+                    <td>@item.SECName</td>
+                    <td>@item.County</td>
+                    <td>@item.PlannedDays</td>
+                    <td>@item.Task_P</td>
+                    <td>@item.AchevedDays</td>
+                    <td>@item.Tasks_A</td>
+                    <td>@($"{item.Contractor?.FName} {item.Contractor?.LName}")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-light">
+                <td colspan="5"><strong>Total Achieved Days</strong></td>
+                <td><strong>@ViewBag.TotalDays Days</strong></td>
+                <td colspan="2" class="text-end">
+                    <a asp-action="Approve"
+                       asp-route-month="@ViewBag.Monthly"
+                       asp-route-ContractorId="@ViewBag.ContractorId"
+                       class="btn btn-success me-2">
+                        Approve
+                    </a>
+                    <a asp-action="Reject"
+                       asp-route-month="@ViewBag.Monthly"
+                       asp-route-ContractorId="@ViewBag.ContractorId"
+                       class="btn btn-danger">
+                        Reject
+                    </a>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+}
+else
+{
+    <p>No productivity data found for this selection.</p>
+}

@@ -228,6 +228,7 @@ namespace TimeProductivityTracking.web.Controllers
                         item.CountryMentor_A = productivities[i].CountryMentor_A;
                         item.UserEmail=User.Identity.Name;
                         item.ContractorId = contractorId;
+                        item.statusApproval = "Waiting";
                     i++;
                 }
 

@@ -31,9 +31,8 @@ namespace TimeProductivityTracking.web.Models
         public string? UserEmail { get; set; }
         [ForeignKey("Contractor")]
         public int? ContractorId { get; set; }
-
         public UserInfo? Contractor { get; set; }
-     
+        public string? statusApproval { get; set; }
     }
 
     public enum Counties { Longford,Roscommon,Sligo,Donegal,Leitrim,Mayo,Meath,Wexford,Wicklow }

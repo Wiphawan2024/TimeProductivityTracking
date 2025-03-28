@@ -22,7 +22,9 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Rates
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Rates.ToListAsync());
+            return View(await _context.Rates
+                .OrderBy(r => r.RateName)
+                .ToListAsync());
         }
 
         // GET: Rates/Details/5

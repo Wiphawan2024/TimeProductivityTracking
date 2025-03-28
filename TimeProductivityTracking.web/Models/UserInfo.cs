@@ -29,8 +29,8 @@ namespace TimeProductivityTracking.web.Models
         public DateTime HireDate { get; set; }
         [Required(ErrorMessage = "Rate is required.")]
         [ForeignKey("Rate")]
-        public int RateID { get; set; }
-        public Rate Rate { get; set; }  // Navigation property
+        public int? RateID { get; set; }
+        public Rate? Rate { get; set; }  // Navigation property
         public int Register { get; set; }
     }
     public enum Roles { Admin, Manager, HR,Contractor }

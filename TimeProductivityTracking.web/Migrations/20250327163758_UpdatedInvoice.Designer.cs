@@ -12,8 +12,8 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250316141016_MyMigrationUpdateUserInfo_Register")]
-    partial class MyMigrationUpdateUserInfo_Register
+    [Migration("20250327163758_UpdatedInvoice")]
+    partial class UpdatedInvoice
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,44 @@ namespace TimeProductivityTracking.web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("HourlyRate")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Month")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("TotalHours")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContractorId");
+
+                    b.ToTable("Invoice", (string)null);
+                });
+
             modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivity", b =>
                 {
                     b.Property<int>("Id")
@@ -34,12 +72,15 @@ namespace TimeProductivityTracking.web.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal?>("AchevedDays")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5,2)");
 
-                    b.Property<string>("CounryMentor_A")
+                    b.Property<int?>("ContractorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CountryMentor_A")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CounryMentor_P")
+                    b.Property<string>("CountryMentor_P")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("County")
@@ -52,7 +93,7 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PlannedDays")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(5, 2)");
 
                     b.Property<string>("SECName")
                         .IsRequired()
@@ -67,7 +108,12 @@ namespace TimeProductivityTracking.web.Migrations
                     b.Property<string>("UserEmail")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("statusApproval")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractorId");
 
                     b.ToTable("Productivities", (string)null);
                 });
@@ -164,7 +210,41 @@ namespace TimeProductivityTracking.web.Migrations
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("RateID");
+
                     b.ToTable("UserInfo", (string)null);
+                });
+
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.Invoice", b =>
+                {
+                    b.HasOne("TimeProductivityTracking.web.Models.UserInfo", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Contractor");
+                });
+
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.Productivity", b =>
+                {
+                    b.HasOne("TimeProductivityTracking.web.Models.UserInfo", "Contractor")
+                        .WithMany()
+                        .HasForeignKey("ContractorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Contractor");
+                });
+
+            modelBuilder.Entity("TimeProductivityTracking.web.Models.UserInfo", b =>
+                {
+                    b.HasOne("TimeProductivityTracking.web.Models.Rate", "Rate")
+                        .WithMany()
+                        .HasForeignKey("RateID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Rate");
                 });
 #pragma warning restore 612, 618
         }

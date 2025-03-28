@@ -84,13 +84,50 @@
                             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                      
                             <!-- Manager can access SEC Contracts -->
-                            @if(User.IsInRole("Manager")||(User.IsInRole("Admin")))
+                            @if(User.IsInRole("Manager"))
                             {
                                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="SECContracts" asp-action="Index">SEC Contracts</a></li>
-
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Invoice</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="ProductivitySummaryViewModels" asp-action="Index">Waiting Approval</a></li>
+                                    </ul>
+                                </li>
                             }
-                            <!-- Manager & Contractor can access Productivity -->
-                            @if (User.IsInRole("Manager") || User.IsInRole("Contractor")|| (User.IsInRole("Admin")))
+                            <!-- Manager can access SEC Contracts -->
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="SECContracts" asp-action="Index">SEC Contracts</a></li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Invoice</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="ProductivitySummaryViewModels" asp-action="Index">Waiting Approval</a></li>
+                                    </ul>
+                                </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Productivity</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Index">Productivities</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Create">Create</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Chart">Chart</a></li>
+                                    </ul>
+                               </li>
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">User Management</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="UserInfoes" asp-action="Index">View Users</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="UserInfoes" asp-action="Create">Create User</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Rates" asp-action="Index">Rate</a></li>
+
+                                    </ul>
+                                </li>
+                            }
+
+
+                            <!--  Contractor can access Productivity -->
+                            @if ( User.IsInRole("Contractor"))
                             {
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Productivity</a>
@@ -98,17 +135,25 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Index">Productivities</a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Create">Create</a></li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Productivities" asp-action="Chart">Chart</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice</a></li>
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="ProductivitySummaryViewModels" asp-action="Summary">Summary</a></li>
-                                       
+         
+                                    </ul>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice</a></li>
+                                </li>
+
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">User Management</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="UserInfoes" asp-action="Index">View Users</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="UserInfoes" asp-action="Create">Create User</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Rates" asp-action="Index">Rate</a></li>
 
                                     </ul>
                                 </li>
-
+                           
                             }
 
-                            <!-- Manager & HR can access User Management -->
-                            @if (User.IsInRole("Manager") || (User.IsInRole("HR")) || (User.IsInRole("Admin")))
+                            <!--  HR can access User Management -->
+                            @if  (User.IsInRole("HR")) 
                             {
 
                                 <li class="nav-item dropdown">
@@ -120,6 +165,7 @@
 
                                     </ul>
                                 </li>
+                             
                             }
 
                             <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
