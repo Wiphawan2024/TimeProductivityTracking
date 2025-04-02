@@ -36,10 +36,24 @@ namespace TimeProductivityTracking.web.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            var invoices = await _context.Invoices 
-                .Include(i => i.Contractor)
-                .Where(i => i.Contractor.Email == user.Email )
-                .ToListAsync();
+            List<Invoice> invoices;
+
+            if (await _userManager.IsInRoleAsync(user, "Manager"))
+            {
+                //Manager sees all invoices 
+                invoices = await _context.Invoices
+                    .Include(i => i.Contractor)
+                    .ToListAsync();
+            }
+            else
+            {
+                //contractor sees only his invoices
+                invoices = await _context.Invoices
+                    .Include(i => i.Contractor)
+                    .Where(i => i.Contractor.Email == user.Email)
+                    .ToListAsync();
+            }
+            
 
             if (!invoices.Any())
             {
@@ -47,6 +61,8 @@ namespace TimeProductivityTracking.web.Controllers
             }   
          
             return View(invoices);
+
+
         }
         // GET: Invoice/Details/5
        public async Task<IActionResult> Details(int? contractorId, string? month,int? Id)
