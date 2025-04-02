@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using TimeProductivityTracking.web.Areas.Identity.Data;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
 using TimeProductivityTracking.web.ViewModels;
@@ -10,56 +12,64 @@ namespace TimeProductivityTracking.web.Controllers
     public class ProductivitySummaryViewModelsController : Controller
     {
         private readonly ProductivitiesContext _context;
-
-        public ProductivitySummaryViewModelsController(ProductivitiesContext context)
+        private readonly UserManager<IdentityAuthUser> _userManager;
+        public ProductivitySummaryViewModelsController(ProductivitiesContext context, UserManager<IdentityAuthUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         //Get: Index
         public async Task<IActionResult>Index()
         {
-            var contractor = _context.Productivities
-             .Include(c => c.Contractor)
-             .Where(c=>c.statusApproval == "Waiting")
-             .AsEnumerable()
-             .GroupBy(c => new {c.Monthly, c.ContractorId,c.Contractor.FName, c.Contractor.LName})
-             .Select(g => new ViewProductivities
-             {
-                 ProductivityId= g.First().Id,
-                 ContractorId=g.Key.ContractorId,
-                 Month = g.Key.Monthly,
-                 FName = g.Key.FName,
-                 LName = g.Key.LName,
-                 TotalDays = g.Sum(p => p.AchevedDays ?? 0),
-                
-            
-             })
-             .OrderBy(c => c.Month)
-             .ToList(); 
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Unauthorized();
 
-        
-            return View(contractor);
+
+            var data = await _context.Productivities
+                    .Include(c => c.Contractor)
+                    .Where(c => (c.statusApproval == "Waiting" ) && c.Contractor != null)
+                    .ToListAsync();
+
+                var contractor = data
+                    .GroupBy(c => new { c.Monthly, c.ContractorId, c.Contractor?.FName, c.Contractor?.LName })
+                    .Select(g => new ViewProductivities
+                    {
+                        ProductivityId = g.First().Id,
+                        ContractorId = g.Key.ContractorId,
+                        Month = g.Key.Monthly,
+                        FName = g.Key.FName ?? "Unknown",
+                        LName = g.Key.LName ?? "Unknown",
+                        TotalDays = g.Sum(p => p.AchevedDays)
+                    })
+                    .OrderBy(c => c.Month)
+                    .ToList();
+
+                return View(contractor);
+            
+
         }
 
-        public async Task<IActionResult> Details(int? ContractorId,string? month)
+        public async Task<IActionResult> Details(int? ContractorId, string? month)
         {
-           
-            var productivities = _context.Productivities
-                .Include(p => p.Contractor)
-                .Where(p=>p.ContractorId==ContractorId && p.Monthly==month);    
-
-            if (productivities == null)
+            if (ContractorId == null || string.IsNullOrEmpty(month))
             {
-                return NotFound();
+                return BadRequest("Contractor ID and month are required.");
             }
 
+            var productivities = await _context.Productivities
+                .Include(p => p.Contractor)
+                .Where(p => p.ContractorId == ContractorId && p.Monthly == month)
+                .ToListAsync(); // added ToListAsync() so the query can be awaited properly
+
+            if (!productivities.Any())
+            {
+                return NotFound("No data found for the selected contractor and month.");
+            }
 
             ViewBag.Monthly = month;
             ViewBag.ContractorId = ContractorId;
-            // Calculate total achieved days
-            ViewBag.TotalDays = productivities.Sum(p => p.AchevedDays);
-
+            ViewBag.TotalDays = productivities.Sum(p => p.AchevedDays); // Assuming AchievedDays is nullable
 
             return View(productivities);
         }
@@ -78,7 +88,7 @@ namespace TimeProductivityTracking.web.Controllers
            //Load contractor info
            foreach (var productivity in toApprove)
             {
-                productivity.statusApproval = "Approved";
+                productivity.statusApproval = "Invoiced";
             }
             await _context.SaveChangesAsync();// Save approval updates
 
@@ -92,7 +102,7 @@ namespace TimeProductivityTracking.web.Controllers
                 .FirstOrDefaultAsync();
 
             decimal hourlyRate = (decimal)(contractor?.Rate.HourlyWage ?? 0);
-            decimal totalHours = toApprove.Sum(p => p.AchevedDays ?? 0) ;
+            decimal totalHours = toApprove.Sum(p => p.AchevedDays) ;
             decimal totalAmout = totalHours * hourlyRate;
 
 
@@ -141,16 +151,17 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 return NotFound("No productivities found for the given month and contractor");
             }
-
+            /*
             //update approval status
             foreach (var productivity in productivities)
             {
-                productivity.statusApproval = "Rejected";
+                productivity.statusApproval = "Cancelled";
             }
-          
 
+            await _context.SaveChangesAsync(); // Save changes to the database
+            */
 
-            return View();
+            return RedirectToAction("Index"); 
         }
 
         // GET: ProductivitySummaryViewModels/Summary
@@ -175,7 +186,7 @@ namespace TimeProductivityTracking.web.Controllers
                 Month = g.Key.Monthly,
                 FName = g.Key.FName,
                 LName = g.Key.LName,
-                TotalAchevedDays = g.Sum(p => p.AchevedDays ?? 0)
+                TotalAchevedDays = g.Sum(p => p.AchevedDays)
             })
                             .OrderBy(g => g.Month)
                 .ThenBy(g => g.SecName)

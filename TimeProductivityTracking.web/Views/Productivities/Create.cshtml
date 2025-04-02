@@ -35,10 +35,10 @@
     <div class="form-group">
         <th> <a>County </a> </th>
     </div>
-    <th> <a>Planned Days </a> </th>
+    <th> <a>Planned hourly work </a> </th>
     <th> <a>Task Planned</a> </th>
     <th> <a>Mentor Planned</a> </th>
-    <th> <a>Acheved Days </a> </th>
+    <th> <a>Acheved hourly work </a> </th>
     <th> <a>Task Acheved</a> </th>
     <th> <a>Mentor Acheved</a> </th>
     <th></th>
@@ -66,7 +66,7 @@
             *@
                 <th> <input asp-for="@Model[i].County" value="@item.County" /> </th>
               
-                <th> <input asp-for="@Model[i].PlannedDays" value="0.5" class="form-control short-input" required /> </th>
+                <th> <input asp-for="@Model[i].PlannedDays" value="7.5" class="form-control short-input" required /> </th>
                 <th class="dropdown-container"> 
                     @Html.DropDownListFor(Model => Model[i].Task_P, 
                         new SelectList(Enum.GetValues(typeof(Tasks))), 
@@ -74,7 +74,7 @@
                         new { @class = "form-control dropdown-custom", required = "required" }) </th>
                
                 <th> <input asp-for="@Model[i].CountryMentor_P" value="@User.Identity.Name" class="form-control" required /> </th>
-                <th> <input asp-for="@Model[i].AchevedDays" value="0.5" class="form-control short-input" required /> </th>
+                <th> <input asp-for="@Model[i].AchevedDays" value="7.5" class="form-control short-input" required /> </th>
 
                 <th class="dropdown-container">
                         @Html.DropDownListFor(Model => Model[i].Tasks_A,

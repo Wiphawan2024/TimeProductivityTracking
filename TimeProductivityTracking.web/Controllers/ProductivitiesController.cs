@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -78,22 +79,24 @@ namespace TimeProductivityTracking.web.Controllers
                 return View();
             }
 
-            // Fetch and filter data based on SEC Name
-            var productivities = await _context.Productivities
-                .Where(p => p.SECName == selectedSEC && p.UserEmail==User.Identity.Name)
-                .OrderBy(p => p.Monthly)
+            // Get raw data and group in memory
+            var rawData = await _context.Productivities
+                .Where(p => p.SECName == selectedSEC && p.UserEmail == userEmail)
                 .ToListAsync();
 
-            // Extract required data while keeping decimal values
-            ViewBag.ChartMonths = productivities.Select(p => p.Monthly).ToList();
-            ViewBag.ChartPlanned = productivities.Select(p => p.PlannedDays).ToList();
-            ViewBag.ChartAchieved = productivities.Select(p => p.AchevedDays).ToList();
+            var grouped = rawData
+                .GroupBy(p =>  DateTime.ParseExact(p.Monthly,"MMMM yyyy",CultureInfo.InvariantCulture)) //Convert string to date time 
+                .OrderBy(g => g.Key)
+                .ToList();
 
-            // Log the extracted data for debugging
+            ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  //
+            ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();
+            ViewBag.ChartAchieved = grouped.Select(g => g.Sum(p => p.AchevedDays)).ToList();
+
+            // Debug log
             Console.WriteLine("ChartMonths: " + string.Join(", ", ViewBag.ChartMonths));
             Console.WriteLine("ChartPlanned: " + string.Join(", ", ViewBag.ChartPlanned));
             Console.WriteLine("ChartAchieved: " + string.Join(", ", ViewBag.ChartAchieved));
-
             return View();
         }
 
@@ -255,7 +258,9 @@ namespace TimeProductivityTracking.web.Controllers
                 return NotFound();
             }
 
-            var productivities = await _context.Productivities.FindAsync(id);
+            var productivities = await _context.Productivities
+                .Include(p=>p.Contractor)
+                .FirstOrDefaultAsync(p=>p.Id==id);  
             if (productivities == null)
             {
                 return NotFound();
@@ -268,22 +273,56 @@ namespace TimeProductivityTracking.web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] Productivity productivities)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
         {
-            if (id != productivities.Id)
+            if (id != productivity.Id)
             {
                 return NotFound();
             }
+
+            var contractor = await _context.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            if (contractor == null)
+            {
+                return Unauthorized(); // user not found
+            }
+
+            // Fetch the original record from DB
+            var originalProductivity = await _context.Productivities.FirstOrDefaultAsync(p => p.Id == id);
+            if (originalProductivity == null)
+            {
+                return NotFound();
+            }
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(productivities);
+
+                    // Update fields
+                    originalProductivity.Date = productivity.Date;
+                    originalProductivity.Monthly = productivity.Monthly;
+                    originalProductivity.SECName = productivity.SECName;
+                    originalProductivity.County = productivity.County;
+                    originalProductivity.PlannedDays = productivity.PlannedDays;
+                    originalProductivity.Task_P = productivity.Task_P;
+                    originalProductivity.CountryMentor_P = productivity.CountryMentor_P;
+                    originalProductivity.AchevedDays = productivity.AchevedDays;
+                    originalProductivity.Tasks_A = productivity.Tasks_A;
+                    originalProductivity.CountryMentor_A = productivity.CountryMentor_A;
+
+
+                    // Keep contractor consistent (based on logged-in user)
+                    originalProductivity.ContractorId = contractor.UserId;
+                    originalProductivity.UserEmail = contractor.Email;
+                    originalProductivity.statusApproval = productivity.statusApproval;
+
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductivitiesExists(productivities.Id))
+                    if (!ProductivitiesExists(productivity.Id))
                     {
                         return NotFound();
                     }
@@ -294,7 +333,7 @@ namespace TimeProductivityTracking.web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(productivities);
+            return View(productivity);
         }
 
         // GET: Productivities/Delete/5

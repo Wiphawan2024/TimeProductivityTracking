@@ -2,6 +2,7 @@
 @*
 
 
+
 @{
     ViewData["Title"] = "Planned Days vs Achieved Days";
 }
@@ -99,10 +100,15 @@ else
         });
     </script>
 }
+
 *@
+
+
+
 
 @{
     ViewData["Title"] = "Planned Days vs Achieved Days";
+    var selectedSEC = Context.Request.Query["selectedSEC"].ToString();
 }
 
 <h2>Planned Days vs Achieved Days</h2>
@@ -114,12 +120,19 @@ else
         <option value="">-- Select SEC --</option>
         @foreach (var sec in ViewBag.SECNames)
         {
-            <option value="@sec" selected="@(sec == Context.Request.Query["selectedSEC"].ToString() ? "selected" : "")">
-                @sec
-            </option>
+            if (sec == selectedSEC)
+            {
+                <option value="@sec" selected="selected">@sec</option>
+            }
+            else
+            {
+                <option value="@sec">@sec</option>
+            }
         }
+
     </select>
 </form>
+
 
 <!-- Debugging Output -->
 @if (ViewBag.ChartMonths == null || !((IEnumerable<dynamic>)ViewBag.ChartMonths).Any())

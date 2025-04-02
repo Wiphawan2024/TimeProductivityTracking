@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250402151212_Fix_Prodcutivities")]
+    partial class Fix_Prodcutivities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,39 +74,37 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<decimal>("AchevedDays")
+                    b.Property<decimal?>("AchevedDays")
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<int?>("ContractorId")
                         .HasColumnType("int");
 
                     b.Property<string>("CountryMentor_A")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CountryMentor_P")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("County")
+                    b.Property<int?>("County")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Monthly")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("PlannedDays")
+                    b.Property<decimal?>("PlannedDays")
                         .HasColumnType("decimal(5, 2)");
 
                     b.Property<string>("SECName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Task_P")
+                    b.Property<int?>("Task_P")
                         .HasColumnType("int");
 
-                    b.Property<int>("Tasks_A")
+                    b.Property<int?>("Tasks_A")
                         .HasColumnType("int");
 
                     b.Property<string>("UserEmail")

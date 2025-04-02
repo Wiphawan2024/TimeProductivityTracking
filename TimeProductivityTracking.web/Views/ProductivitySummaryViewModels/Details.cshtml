@@ -14,9 +14,9 @@
                 <th>Month</th>
                 <th>SEC Name</th>
                 <th>County</th>
-                <th>Planned Days</th>
+                <th>Planned Hours</th>
                 <th>Tasks Planned</th>
-                <th>Achieved Days</th>
+                <th>Achieved Hours</th>
                 <th>Tasks Achieved</th>
                 <th>Mentor</th>
             </tr>
@@ -45,13 +45,13 @@
                        asp-route-month="@ViewBag.Monthly"
                        asp-route-ContractorId="@ViewBag.ContractorId"
                        class="btn btn-success me-2">
-                        Approve
+                        Generate Invoice
                     </a>
                     <a asp-action="Reject"
                        asp-route-month="@ViewBag.Monthly"
                        asp-route-ContractorId="@ViewBag.ContractorId"
                        class="btn btn-danger">
-                        Reject
+                        Cancel
                     </a>
                 </td>
             </tr>
