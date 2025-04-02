@@ -19,15 +19,12 @@
 </form>
 
 
-<!-- Show message if no month is selected -->
 @if(!Model.Any())
 {
     <p>Please select a month to display productivity data. </p>
 }
 else
 {
-    <!-- Display Table Only When Data Exists-->
-   
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -40,6 +37,7 @@ else
             <th>Achieved Days</th>
             <th>Tasks Achieved</th>
             <th>Mentor</th>
+            <th>Status</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -55,12 +53,30 @@ else
                 <td>@item.AchevedDays</td>
                 <td>@item.Tasks_A</td>
                 <td>@($"{item.Contractor?.FName} {item.Contractor?.LName}")</td>
+                <td>@item.statusApproval</td>
 
-                <td>
+                @if(item.statusApproval=="Invoiced")
+                    {
+                       <td>
+                   <span style="color: grey; text-decoration: underline; cursor: not-allowed; pointer-events: none;">
+                            Edit
+                        </span> |
+                        <span style="color: grey; text-decoration: underline; cursor: not-allowed; pointer-events: none;">
+                            Details
+                        </span> |
+                        <span style="color: grey; text-decoration: underline; cursor: not-allowed; pointer-events: none;">
+                            Delete
+                        </span>
+                     </td>
+                    }
+                    else
+                    {
+                    <td>
                     <a href="@Url.Action("Edit", new { id = item.Id })">Edit</a> |
                     <a href="@Url.Action("Details", new { id = item.Id })">Details</a> |
                     <a href="@Url.Action("Delete", new { id = item.Id })" onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
+                    }
             </tr>
         }
     </tbody>

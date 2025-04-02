@@ -25,7 +25,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index(string selectedMonth)
         {
-            //Get monts from database
+            //Get months from database
             var rawMonths = await _context.Productivities
                .Where(p => p.UserEmail == User.Identity.Name && !string.IsNullOrEmpty(p.Monthly))
                .Select(p => p.Monthly)
@@ -209,8 +209,7 @@ namespace TimeProductivityTracking.web.Controllers
         }
 
         // POST: Productivities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
@@ -287,8 +286,7 @@ namespace TimeProductivityTracking.web.Controllers
         }
 
         // POST: Productivities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+  
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
@@ -398,7 +396,7 @@ namespace TimeProductivityTracking.web.Controllers
             return Enumerable.Range(1, 12).Select(i => new SelectListItem
             {
                 Value = i.ToString(), // Stores month number (1-12)
-                Text = new DateTime(2025, i, 1).ToString("MMMM yyyy") // Displays month + year (e.g., "January 2025")
+                Text = new DateTime(2025, i, 1).ToString("MMMM yyyy") 
             }).ToList();
         }
 
