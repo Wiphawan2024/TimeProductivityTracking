@@ -14,13 +14,13 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("User ID")]
         public int UserId{ get; set; }
         [DisplayName("First Name")]
-        public string FName { get; set; }
+        public string? FName { get; set; }
         [DisplayName("Last Name")]
-        public string LName { get; set; }
+        public string? LName { get; set; }
         [DisplayName("Phone")]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         [DisplayName("Email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [DisplayName("Role")]
         public Roles Role { get; set; }
 
