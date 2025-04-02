@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+using System.Data;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
 using TimeProductivityTracking.web.ViewModels;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TimeProductivityTracking.web.Controllers
 {

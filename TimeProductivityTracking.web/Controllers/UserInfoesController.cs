@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using TimeProductivityTracking.web.Areas.Identity.Data;
 using TimeProductivityTracking.web.Data;
@@ -33,8 +34,10 @@ namespace TimeProductivityTracking.web.Controllers
 
         // GET: UserInfoes
         public async Task<IActionResult> Index()
-        {     var users=_context.Users.Include(u=>u.Rate).ToList();
-            
+        {     var users= await _context.Users
+                .Include(u=>u.Rate)
+                .ToListAsync();
+         
             return View(users);
         }
 
@@ -205,14 +208,14 @@ namespace TimeProductivityTracking.web.Controllers
                     userInfo.Register = 1;
                 }
 
-                //  Update Role in AspNetUserRoles if changed
+                //  Update Role in AspNetUserRoles
                 var user = await _userManager.FindByEmailAsync(userInfo.Email);
                 if (user != null)
                 {
                     var currentRoles = await _userManager.GetRolesAsync(user);
-                    if (!currentRoles.Contains(userInfo.Role.ToString()))
+                    if (currentRoles.IsNullOrEmpty())
                     {
-                        await _userManager.RemoveFromRolesAsync(user, currentRoles);
+                       /// await _userManager.RemoveFromRolesAsync(user, currentRoles);
                         await _userManager.AddToRoleAsync(user, userInfo.Role.ToString());
                     }
                 }

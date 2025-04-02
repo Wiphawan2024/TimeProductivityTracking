@@ -42,10 +42,24 @@ namespace TimeProductivityTracking.web.Controllers
 
             return View(sECContract);
         }
+        private IEnumerable<SelectListItem> GetCountiesList()
+        {
+            return Enum.GetValues(typeof(Counties))
+                       .Cast<Counties>()
+                       .Select(c => new SelectListItem
+                       {
+                           Value = c.ToString(),
+                           Text = c.ToString()
+                       });
+        }
+
+
+
 
         // GET: SECContracts/Create
         public IActionResult Create()
         {
+            ViewBag.Counties = GetCountiesList();
             return View();
         }
 
@@ -62,6 +76,7 @@ namespace TimeProductivityTracking.web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Counties=GetCountiesList();
             return View(SECContract);
         }
 
@@ -78,6 +93,7 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Counties = GetCountiesList();
             return View(sECContract);
         }
 
@@ -113,6 +129,7 @@ namespace TimeProductivityTracking.web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Counties = GetCountiesList();
             return View(SecContract);
         }
 

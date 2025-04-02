@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -15,10 +16,12 @@ namespace TimeProductivityTracking.web.Models
 
             public int ContractorId { get; set; }
             public UserInfo Contractor { get; set; }
-
+            [Precision(18, 2)]
             public decimal TotalHours { get; set; }
-            public decimal HourlyRate { get; set; }
-            public decimal TotalAmount { get; set; }
+            [Precision(18, 2)]
+         public decimal HourlyRate { get; set; }
+            [Precision(18, 2)]
+         public decimal TotalAmount { get; set; }
       
 
 

@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
+using System.Numerics;
 using TimeProductivityTracking.web.Models;
 
 
@@ -42,15 +44,136 @@ namespace TimeProductivityTracking.web.Data
                 {
                     var secContract = new SECContract[]
                     {
-                new SECContract{ SECContractId=1,SECName="Abbeyshrule Yard Hub",County="Longford",
-                    Address="Yard Hub, Abbeyshrule, Co Longford",PrimaryContract=" -",Phone="0892021000",Email="Test@gmail.com" },
-                new SECContract{ SECContractId=2,SECName="Ardagh SEC",County="Longford",
-                    Address="Ardagh Community Centre",PrimaryContract="-",Phone="0892021000",Email="Test@gmail.com" },
-                new SECContract{ SECContractId=3,SECName="Aughnacliffe-St Colmcille SEC",County="Longford",
-                    Address="St Colmcille Community Centre, Aughnacliffe, Co Longford",PrimaryContract=" - ",Phone="0892021000",Email="Test@gmail.com" },
-                new SECContract{ SECContractId=4,SECName="Ballinalee SEC",County="Longford",
-                    Address="Ballinalee, Co Longford",PrimaryContract="-",Phone="0892021000",Email="Test@gmail.com" }
+                        new SECContract
+                        {
+                            SECName = "Abbeyshrule Yard Hub",
+                            County = "Longford",
+                            Address = "Yard Hub, Abbeyshrule, Co Longford",
+                            PrimaryContract = "-",
+                            Phone = "0892021000",
+                            Email = "Test@gmail.com"
+                        },
+                        new SECContract
+                        {
+                            SECName = "Ardagh SEC",
+                            County = "Longford",
+                            Address = "Ardagh Community Centre",
+                            PrimaryContract = "-",
+                            Phone = "0892021000",
+                            Email = "Test@gmail.com"
+                        },
+                        new SECContract
+                        {
+                            SECName = "Aughnacliffe-St Colmcille SEC",
+                            County = "Longford",
+                            Address = "St Colmcille Community Centre, Aughnacliffe, Co Longford",
+                            PrimaryContract = "-",
+                            Phone = "0892021000",
+                            Email = "Test@gmail.com"
+                        },
+                        new SECContract
+                        {
+                            SECName = "Ballinalee SEC",
+                            County = "Longford",
+                            Address = "Ballinalee, Co Longford",
+                            PrimaryContract = "-",
+                            Phone = "0892021000",
+                            Email = "Test@gmail.com"
+                        },
+                        new SECContract
+                        {
+                            SECName = "Drumlish - Ballinamuck Area SEC",
+                            County = "Longford",
+                            Address = "Drumlish Community Centre",
+                            PrimaryContract = "-",
+                            Phone = "0892021000",
+                            Email = "Test@gmail.com"
+                        },
+                        new SECContract
+                        {
+                            SECName="Edgeworthstown SEC",
+                            County="Longford",
+                            Address="Edgeworthstown, Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Granard Area SEC",
+                            County="Longford",
+                            Address="Granard, Co. Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Lanesborough Tourism Coop SEC",
+                            County="Longford",
+                            Address="Lanesborough, Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Longford Town SEC",
+                            County="Longford",
+                            Address="Longford Town, Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Longford Renewables SEC",
+                            County="Longford",
+                            Address="Wiphawab Klinhom, Ballyleague, Lanesborough, Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Moyne - Latin School Centre SEC",
+                            County="Longford",
+                            Address="Latin School, Moyne Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Newtownforbes SEC",
+                            County="Longford",
+                            Address="Newtownforbes, Co Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Ballymahon Area - Planned",
+                            County="Longford",
+                            Address="Ballymahon Town Team & GAA Club",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        },
+                        new SECContract
+                        {
+                            SECName="Kenagh - Planned",
+                            County="Longford",
+                            Address="Cllr Colm Murray, Aras an Chontae, Longford",
+                            PrimaryContract="-",
+                            Phone="0892021000",
+                            Email="XXXXXXXXXXXXXX"
+                        }
                     };
+
+                
+
 
                     context.SECContracts.AddRange(secContract);
                     context.SaveChanges();

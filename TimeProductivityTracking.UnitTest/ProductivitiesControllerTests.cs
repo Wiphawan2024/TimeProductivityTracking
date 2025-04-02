@@ -57,7 +57,7 @@ public class ProductivitiesControllerTests : IDisposable
         var productivityList = new List<Productivity>
         {
             new Productivity { SECName = "SEC 1", County = Counties.Longford, PlannedDays = 5 },
-            new Productivity { SECName = "SEC 2", County = Counties.Sligo, PlannedDays = 10 }
+            new Productivity { SECName = "SEC 2", County = Counties.Offaly, PlannedDays = 10 }
         };
 
         string selectedMonth = "1"; // January
@@ -104,7 +104,7 @@ public class ProductivitiesControllerTests : IDisposable
         // Arrange
         var productivityList = new List<Productivity>
         {
-            new Productivity { SECName = "SEC 1", County = Counties.Meath, PlannedDays = 8 }
+            new Productivity { SECName = "SEC 1", County = Counties.Longford, PlannedDays = 8 }
         };
 
         string selectedMonth = "3"; // March

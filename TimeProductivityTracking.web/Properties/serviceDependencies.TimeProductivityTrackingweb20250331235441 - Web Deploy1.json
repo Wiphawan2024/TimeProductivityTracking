@@ -1,0 +1,20 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/TimeProductivityTrackingweb20250331235441/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsProductivitiesContext_44C207E42F",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/sec/databases/TimeProductivityTracking.web",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:ProductivitiesContext",
+      "dynamicId": null
+    },
+    "mssql2": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/TimeProductivityTrackingweb20250331235441/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsIdentityAuthContextConn_27CCC3A445",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/sec/databases/TimeProductivityTracking.web",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:IdentityAuthContextConnection",
+      "dynamicId": null
+    }
+  }
+}

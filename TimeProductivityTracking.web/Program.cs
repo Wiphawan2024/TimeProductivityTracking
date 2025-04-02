@@ -2,11 +2,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Areas.Identity.Data;
 using TimeProductivityTracking.web.Data;
-using DinkToPdf; //for pdf
-using DinkToPdf.Contracts;
-using System.Runtime.InteropServices;//for pdf
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+//  Read Connection Strings
+//var identityConnection = builder.Configuration.GetConnectionString("IdentityAuthContextConnection");
+//
+//var productivityConnection = builder.Configuration.GetConnectionString("ProductivitiesContext");
+
+
 
 var connectionString = builder.Configuration.GetConnectionString("IdentityAuthContextConnection") ?? throw new InvalidOperationException("Connection string 'IdentityAuthContextConnection' not found.");
 
@@ -16,59 +21,61 @@ builder.Services.AddDefaultIdentity<IdentityAuthUser>
     .AddRoles<IdentityRole>() // Add role 
     .AddEntityFrameworkStores<IdentityAuthContext>();
 
-// Manually load the wkhtmltox DLL
-// Set the correct DLL path
-var wkhtmltoxPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "wkhtmltopdf", "wkhtmltox.dll");
-if (File.Exists(wkhtmltoxPath))
-{
-    NativeLibrary.Load(wkhtmltoxPath);
-}
-else
-{
-    throw new Exception($"wkhtmltopdf DLL not found at {wkhtmltoxPath}");
-}
-
-// Register DinkToPdf service
-builder.Services.AddSingleton<IConverter>(new SynchronizedConverter(new PdfTools()));
-
-
-
-//1. Add connect database
-
 builder.Services.AddDbContext<ProductivitiesContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("ProductivitiesContext") ?? throw new InvalidOperationException("Connection string 'ProductivitiesContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ProductivitiesContext") ??
+    throw new InvalidOperationException("Connection string 'ProductivitiesContext' not found.")));
 
 
+
+//  MVC Setup
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-//Initialize Data
+
+// Seed Data
 using (var scope = app.Services.CreateScope())
 {
-    var service=scope.ServiceProvider;
-    DbInitializer.Initializer(service); //Initialize SEC Contracts
-
-    await SeedDBInitialize.InitializeAsync(service);
+    var service = scope.ServiceProvider;
+    try
+    {
+        Console.WriteLine("✔ Seeding database...");
+        DbInitializer.Initializer(service);
+        await SeedDBInitialize.InitializeAsync(service);
+        Console.WriteLine("✔ Database seeding completed.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("❌ Error during DB seeding: " + ex.Message);
+        throw;
+    }
 }
 
-    // Configure the HTTP request pipeline.
+//  Middleware Pipeline
+try
+{
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Home/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+    app.UseHttpsRedirection();
+    app.UseStaticFiles();
 
-app.UseRouting();
+    app.UseRouting();
+    app.UseAuthentication(); // Needed for Identity
+    app.UseAuthorization();
 
-app.UseAuthorization();
+    app.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapRazorPages();//Identity
-app.Run();
+    app.MapRazorPages(); // Enables Identity UI
+    app.Run();
+    Console.WriteLine("✔ Application started successfully.");
+}
+catch (Exception ex)
+{
+    Console.WriteLine("❌ Error during app initialization: " + ex.Message);
+    throw;
+}

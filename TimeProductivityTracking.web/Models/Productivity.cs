@@ -35,12 +35,23 @@ namespace TimeProductivityTracking.web.Models
         public string? statusApproval { get; set; }
     }
 
-    public enum Counties { Longford,Roscommon,Sligo,Donegal,Leitrim,Mayo,Meath,Wexford,Wicklow }
+    public enum Counties { Longford, Westmeath, Offaly , Laois }
     public enum Tasks
     { [Description("New SEC Registered")] NewSECRegistered = 0,
-      [Description("Energy Master Plan(EMP)")] EMP =1,
+      [Description("EMP application submitted")] EMPApplicationSubmitted =1,
       [Description("EMP Completed")] EMPCompleted=2,
-      [Description("Project - Community Retrofit started")] ProjectCommunityRetrofitStarted=3
+      [Description("Project - Indiviudual Solar PV started")] ProjectIndiviudualSolarPVstarted=3,
+      [Description("Project - Indiviudual Solar PV completed")] ProjectIndividualSolarPVcompleted=4,
+      [Description("Project - Community Retrofit started")]ProjectCommunityRetrofitstarted=5,
+      [Description("Project - Community Retrofit completed")]ProjectCommunityRetrofitcompleted=6,
+      [Description("Project - Community Solar 'Meitheal' started")]ProjectCommunitySolarMeithealstarted=7,
+      [Description("Project - Community Solar 'Meitheal' completed")]ProjectCommunitySolarMeithealcompleted=8,
+      [Description("Event - Online Webinar")]EventOnlineWebinar=9,
+      [Description("Event - In-person Workshop")]EventInpersonWorkshop=10,
+      [Description("None - No completions this month")]NoneNoCompletionsThisMonth=11,
+      [Description("None - No planned actvities")]NoneNoPlannedActivities=12
+
+
     }
 
 

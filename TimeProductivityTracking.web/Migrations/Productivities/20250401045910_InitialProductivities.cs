@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace TimeProductivityTracking.web.Migrations
+namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialProductivities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -29,7 +29,8 @@ namespace TimeProductivityTracking.web.Migrations
                 name: "SECContract",
                 columns: table => new
                 {
-                    SECContractId = table.Column<int>(type: "int", nullable: false),
+                    SECContractId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     SECName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     County = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -74,10 +75,13 @@ namespace TimeProductivityTracking.web.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    InvoiceNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    InvoiceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Month = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContractorId = table.Column<int>(type: "int", nullable: false),
-                    Month = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalDaysWorked = table.Column<double>(type: "float", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    TotalHours = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    HourlyRate = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {

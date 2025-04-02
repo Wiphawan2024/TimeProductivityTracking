@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DinkToPdf;
-using DinkToPdf.Contracts;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,14 +18,14 @@ namespace TimeProductivityTracking.web.Controllers
     public class InvoicesController : Controller
     {
         private readonly ProductivitiesContext _context;
-        private readonly IConverter _pdfConverter;
+
         private readonly UserManager<IdentityAuthUser> _userManager;
         public InvoicesController(ProductivitiesContext context,
-            IConverter pdfConverter,
+ 
             UserManager<IdentityAuthUser> userManager)
         {
             _context = context;
-            _pdfConverter = pdfConverter;
+     
             _userManager = userManager;
         }
 

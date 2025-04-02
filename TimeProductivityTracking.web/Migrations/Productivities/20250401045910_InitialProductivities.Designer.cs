@@ -9,11 +9,11 @@ using TimeProductivityTracking.web.Data;
 
 #nullable disable
 
-namespace TimeProductivityTracking.web.Migrations
+namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250328100016_Fixed_UserInfo")]
-    partial class Fixed_UserInfo
+    [Migration("20250401045910_InitialProductivities")]
+    partial class InitialProductivities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,7 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("HourlyRate")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("InvoiceDate")
@@ -51,9 +52,11 @@ namespace TimeProductivityTracking.web.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("TotalHours")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
@@ -141,7 +144,10 @@ namespace TimeProductivityTracking.web.Migrations
             modelBuilder.Entity("TimeProductivityTracking.web.Models.SECContract", b =>
                 {
                     b.Property<int>("SECContractId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SECContractId"));
 
                     b.Property<string>("Address")
                         .IsRequired()

@@ -21,5 +21,5 @@ public class IdentityAuthContext : IdentityDbContext<IdentityAuthUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 
-public DbSet<TimeProductivityTracking.web.Models.SECContract> SECContract { get; set; } = default!;
+//public DbSet<TimeProductivityTracking.web.Models.SECContract> SECContract { get; set; } = default!;
 }

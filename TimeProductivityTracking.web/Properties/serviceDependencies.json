@@ -2,7 +2,13 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:IdentityAuthContextConnection"
+      "connectionId": "ConnectionStrings:ProductivitiesContext",
+      "dynamicId": null
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:IdentityAuthContextConnection",
+      "dynamicId": null
     }
   }
 }

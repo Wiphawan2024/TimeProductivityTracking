@@ -150,7 +150,10 @@ namespace TimeProductivityTracking.web.Controllers
                   
                     Date=DateTime.Now,
                  
-                    SECName = item.SECName
+                    SECName = item.SECName,
+                    County = Enum.Parse<Counties>(item.County)//Convert the string to the Counties enum
+
+
 
                 };
                 NewProductivity.Add(product);
