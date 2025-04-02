@@ -38,7 +38,7 @@ namespace TimeProductivityTracking.web.Controllers
 
             List<Invoice> invoices;
 
-            if (await _userManager.IsInRoleAsync(user, "Manager"))
+            if (await _userManager.IsInRoleAsync(user, "Manager")||await _userManager.IsInRoleAsync(user, "Admin"))
             {
                 //Manager sees all invoices 
                 invoices = await _context.Invoices

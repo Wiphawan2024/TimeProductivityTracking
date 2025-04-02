@@ -17,14 +17,10 @@
         <label for="SelectedMonth" class="form-label">Select a Month</label>
         <a class="dropdown-container">
          @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Please Select a Month",
-                     new { @class = "form-control dropdown-custom monthly-input", required = "required" })
+                     new { @class = "form-control monthly-input", required = "required" })
 
 
         </a> </div>
-
-
-
-
     <div class="form-group">
         <thead class="table-dark">
       <table class="table">
@@ -56,22 +52,14 @@
             {
             <tr>
                 <th><input asp-for="@Model[i].SECName" value="@item.SECName" type="text" class="form-control sec-name-input" required title="@item.SECName" />  </th>
-       @*
-                <th class="dropdown-container">
-                        @Html.DropDownListFor(Model => Model[i].County,
-                                 new SelectList(Enum.GetValues(typeof(Counties))),
-                                 "Select ..",
-                                 new { @class = "form-control dropdown-custom", required = "required" })
-                </th>
-            *@
-                <th> <input asp-for="@Model[i].County" value="@item.County" /> </th>
-              
+                <th> <input asp-for="@Model[i].County" value="@item.County" /> </th>          
                 <th> <input asp-for="@Model[i].PlannedDays" value="7.5" class="form-control short-input" required /> </th>
                 <th class="dropdown-container"> 
                     @Html.DropDownListFor(Model => Model[i].Task_P, 
                         new SelectList(Enum.GetValues(typeof(Tasks))), 
-                        "Select ..", 
-                        new { @class = "form-control dropdown-custom", required = "required" }) </th>
+                        "Select ..",
+                                 new { @class = "form-control", required = "required" })
+                </th>
                
                 <th> <input asp-for="@Model[i].CountryMentor_P" value="@User.Identity.Name" class="form-control" required /> </th>
                 <th> <input asp-for="@Model[i].AchevedDays" value="7.5" class="form-control short-input" required /> </th>
@@ -80,7 +68,7 @@
                         @Html.DropDownListFor(Model => Model[i].Tasks_A,
                         new SelectList(Enum.GetValues(typeof(Tasks))), 
                         "Select ..", 
-                        new { @class = "form-control dropdown-custom",  required = "required" }) 
+                        new { @class = "form-control",  required = "required" }) 
                 </th>
 
                 <th> <input asp-for="@Model[i].CountryMentor_A" value="@User.Identity.Name" class="form-control" required /> </th>

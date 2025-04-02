@@ -113,4 +113,13 @@ body {
 
 
 
-/*end bg*/
+/* Use this for native select with default triangle */
+select.form-control {
+    appearance: auto;
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    background-color: white;
+}
+
+
+

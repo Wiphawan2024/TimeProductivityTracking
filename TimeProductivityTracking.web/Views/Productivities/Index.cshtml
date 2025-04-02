@@ -10,14 +10,14 @@
     <label for="selectedMonth">Select Month:</label>
     <select id="selectedMonth" name="selectedMonth" onchange="this.form.submit()">
         <option value="">-- Select Month --</option>
-        @foreach (var month in ViewBag.Months)
+        @foreach (SelectListItem month in ViewBag.Months)
         {
-            <option value="@month" selected="@(month == Context.Request.Query["selectedMonth"].ToString() ? "selected" : null)">
-                @month
-            </option>
+            var selectedAttr = month.Selected ? " selected" : "";
+            @:<option value="@month.Value"@selectedAttr>@month.Text</option>
         }
     </select>
 </form>
+
 
 <!-- Show message if no month is selected -->
 @if(!Model.Any())

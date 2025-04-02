@@ -28,7 +28,7 @@ namespace TimeProductivityTracking.web.Controllers
 
             var data = await _context.Productivities
                     .Include(c => c.Contractor)
-                    .Where(c => (c.statusApproval == "Waiting" ) && c.Contractor != null)
+                    .Where(c => (c.statusApproval == "Waiting" ) && c.Contractor.Email == user.Email)
                     .ToListAsync();
 
                 var contractor = data

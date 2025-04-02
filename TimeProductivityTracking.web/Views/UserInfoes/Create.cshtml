@@ -32,14 +32,16 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                @Html.DropDownListFor(m => m.Role, new SelectList(Enum.GetValues(typeof(Roles))), "Select Role") <br /><br />
-
+                @Html.DropDownListFor(m => m.Role, new SelectList(Enum.GetValues(typeof(Roles))), "Select Role", new { @class = "form-control" })
                 <span asp-validation-for="Role" class="text-danger"></span>
 
-
             </div>
+
+
+   
             <div class="form-group">
                 <label asp-for="HireDate" class="control-label"></label>
                 <input asp-for="HireDate" class="form-control" />
@@ -48,13 +50,14 @@
 
             <div class="form-group">
                 <label asp-for="RateID" class="control-label"></label>
-
-                @Html.DropDownList("RateID", ViewBag.Rate as SelectList, "Select a Rate...")<br />
+                @Html.DropDownList("RateID", ViewBag.Rate as SelectList, "Select a Rate...", new { @class = "form-control" })
+                <span asp-validation-for="RateID" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
+            <div class="form-group mt-3">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>

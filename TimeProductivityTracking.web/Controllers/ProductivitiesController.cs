@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,19 +21,39 @@ namespace TimeProductivityTracking.web.Controllers
         {
             _context = context;
         }
-     
+
         // GET: Productivities
         public async Task<IActionResult> Index(string selectedMonth)
         {
             //Get monts from database
-            ViewBag.Months=await _context.Productivities
-                .Include(p=>p.Contractor)
-                .Where(p=>p.UserEmail==User.Identity.Name)
-                .Select(p=>p.Monthly)
-                .Distinct()
-                .OrderBy(m=>m)
-                .ToListAsync();
-            
+            var rawMonths = await _context.Productivities
+               .Where(p => p.UserEmail == User.Identity.Name && !string.IsNullOrEmpty(p.Monthly))
+               .Select(p => p.Monthly)
+               .Distinct()
+               .ToListAsync();
+
+            // Convert to DateTime and order
+            var orderedMonths = rawMonths
+                .Where(m => DateTime.TryParseExact(m, "MMMM yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                .Select(m => new
+                {
+                    Value = m,
+                    Date = DateTime.ParseExact(m, "MMMM yyyy", CultureInfo.InvariantCulture)
+                })
+                .OrderBy(x => x.Date)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.Value,
+                    Text = x.Value,
+                    Selected = (x.Value == selectedMonth)
+                })
+                .ToList();
+
+            ViewBag.Months = orderedMonths;
+
+
+
+
             //If no month is selected, return an empty list
             if (string.IsNullOrEmpty(selectedMonth))
             {
@@ -44,13 +65,14 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 productivities = productivities
                     .Include(p => p.Contractor)
-                    .Where(p => p.Monthly == selectedMonth && p.UserEmail==User.Identity.Name);
+                    .Where(p => p.Monthly == selectedMonth && p.UserEmail == User.Identity.Name);
 
             }
             //Fetch and filter productivities based on the selected month
             var productivitiesList = await _context.Productivities
-                .Include(p=>p.Contractor)
-                .Where(p=>p.Monthly==selectedMonth && p.UserEmail==User.Identity.Name).ToListAsync();
+                .Include(p => p.Contractor)
+                .Where(p => p.Monthly == selectedMonth && p.UserEmail == User.Identity.Name).ToListAsync();
+
 
             return View(productivitiesList);
         }
@@ -93,10 +115,6 @@ namespace TimeProductivityTracking.web.Controllers
             ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();
             ViewBag.ChartAchieved = grouped.Select(g => g.Sum(p => p.AchevedDays)).ToList();
 
-            // Debug log
-            Console.WriteLine("ChartMonths: " + string.Join(", ", ViewBag.ChartMonths));
-            Console.WriteLine("ChartPlanned: " + string.Join(", ", ViewBag.ChartPlanned));
-            Console.WriteLine("ChartAchieved: " + string.Join(", ", ViewBag.ChartAchieved));
             return View();
         }
 

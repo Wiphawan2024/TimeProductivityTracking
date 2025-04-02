@@ -63,7 +63,14 @@ namespace TimeProductivityTracking.web.Controllers
         public IActionResult Create()
 
         {
-            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName");
+            ViewBag.Rate = new SelectList(_context.Rates.Select(r => new
+            {
+                r.RateID,
+                DisplayText = r.RateName + " - € " + r.HourlyWage
+            }),
+            "RateID", "DisplayText"
+              );
+
             return View();
         }
 
@@ -74,7 +81,14 @@ namespace TimeProductivityTracking.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("UserId,FName,LName,Phone,Email,Role,HireDate,RateID,Register=0")] UserInfo userInfo)
         {
-            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName");
+            ViewBag.Rate = new SelectList(_context.Rates.Select(r=> new 
+            { r.RateID,
+              DisplayText=r.RateName+ " - €" + r.HourlyWage
+            }),
+              "RateID", "DisplayText"
+                );
+
+
             if (ModelState.IsValid)
             {              
                    _context.Add(userInfo);
@@ -259,8 +273,18 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Rate = new SelectList(_context.Rates, "RateID", "RateName", userInfo.RateID);
 
+            ViewBag.Rate = new SelectList(_context.Rates.Select(r => new
+            {
+                r.RateID,
+                DisplayText = r.RateName + " - €" + r.HourlyWage
+            }),
+             "RateID", 
+             "DisplayText"
+             );
+
+
+       
             if (id == null)
             {
                 return NotFound();
