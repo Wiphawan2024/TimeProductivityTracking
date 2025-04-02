@@ -17,7 +17,8 @@ jobs:
         with:
           dotnet-version: '7.0.x'
 
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -25,8 +26,12 @@ jobs:
         run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Begin SonarQube Analysis
+        working-directory: TimeProductivityTracking.web
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          cd TimeProductivityTracking.API
-          dotnet-sonarscanner begin /k:"TimeProductivityTracking" /o:"wiphawan2024" /d:
+          dotnet-sonarscanner begin /k:"TimeProductivityTracking" /o:"wiphawan2024" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
+      - name: Build solution
+        working-directory: TimeProductivityTracking.web
+        run: dotnet build --no
