@@ -44,8 +44,8 @@ namespace TimeProductivityTracking.web.Controllers
                                  a.LName
                              };
 
-                string Fname = null;
-                string Lname = null;
+                string? Fname = null;
+                string? Lname = null;
                 foreach (var i in result)
                 {
                     Fname = i.FName;

@@ -6,7 +6,7 @@ namespace TimeProductivityTracking.web.Models
     {
         [Key]
         public int RateID { get; set; }
-        public string RateName { get; set; }
+        public string? RateName { get; set; }
         public double HourlyWage { get; set; }
 
     }

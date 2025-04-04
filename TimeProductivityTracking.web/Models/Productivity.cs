@@ -22,11 +22,11 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("Task_P")]
         public Tasks Task_P { get; set; }
         [DisplayName("Mentor")]
-        public string CountryMentor_P { get; set; }
+        public string? CountryMentor_P { get; set; }
 
         public Decimal AchevedDays { get; set; }
         public Tasks Tasks_A { get; set; }
-        public string CountryMentor_A { get; set; }
+        public string? CountryMentor_A { get; set; }
         [DisplayName("User Email")]
         public string? UserEmail { get; set; }
         [ForeignKey("Contractor")]
