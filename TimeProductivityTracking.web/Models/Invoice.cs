@@ -10,12 +10,12 @@ namespace TimeProductivityTracking.web.Models
 
             public int Id { get; set; }
 
-            public string InvoiceNumber { get; set; }
+            public string? InvoiceNumber { get; set; } 
             public DateTime InvoiceDate { get; set; }
-            public string Month { get; set; }
+            public string? Month { get; set; }
 
             public int ContractorId { get; set; }
-            public UserInfo Contractor { get; set; }
+            public UserInfo? Contractor { get; set; }
             [Precision(18, 2)]
             public decimal TotalHours { get; set; }
             [Precision(18, 2)]

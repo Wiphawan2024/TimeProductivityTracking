@@ -108,7 +108,7 @@ namespace TimeProductivityTracking.web.Controllers
                 .OrderBy(g => g.Key)
                 .ToList();
 
-            ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  //
+            ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  
             ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();
             ViewBag.ChartAchieved = grouped.Select(g => g.Sum(p => p.AchevedDays)).ToList();
 
@@ -138,7 +138,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
-            DateTime month;
+            //DateTime month;
 
             // Generate a list of months
             List<SelectListItem> months = Enumerable.Range(1, 12).Select(i => new SelectListItem
@@ -211,8 +211,11 @@ namespace TimeProductivityTracking.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
       {
-            var contractorId=0;
-            var currentUserEmail=User.Identity.Name;
+
+         
+
+            var contractorId =0;
+            var currentUserEmail=User?.Identity?.Name;
             var contractor=_context.Users.FirstOrDefault(u=>u.Email==currentUserEmail);
             if (contractor!=null)
             {
@@ -246,7 +249,7 @@ namespace TimeProductivityTracking.web.Controllers
                         item.AchevedDays = productivities[i].AchevedDays;
                         item.Tasks_A = productivities[i].Tasks_A;
                         item.CountryMentor_A = productivities[i].CountryMentor_A;
-                        item.UserEmail=User.Identity.Name;
+                        item.UserEmail=User?.Identity?.Name;
                         item.ContractorId = contractorId;
                         item.statusApproval = "Waiting";
                     i++;
