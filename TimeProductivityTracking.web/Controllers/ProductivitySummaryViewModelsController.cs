@@ -60,7 +60,7 @@ namespace TimeProductivityTracking.web.Controllers
             var productivities = await _context.Productivities
                 .Include(p => p.Contractor)
                 .Where(p => p.ContractorId == ContractorId && p.Monthly == month)
-                .ToListAsync(); // added ToListAsync() so the query can be awaited properly
+                .ToListAsync(); 
 
             if (!productivities.Any())
             {
@@ -69,7 +69,7 @@ namespace TimeProductivityTracking.web.Controllers
 
             ViewBag.Monthly = month;
             ViewBag.ContractorId = ContractorId;
-            ViewBag.TotalDays = productivities.Sum(p => p.AchevedDays); // Assuming AchievedDays is nullable
+            ViewBag.TotalDays = productivities.Sum(p => p.AchevedDays); 
 
             return View(productivities);
         }

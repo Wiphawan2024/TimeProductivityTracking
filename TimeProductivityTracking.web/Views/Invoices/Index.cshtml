@@ -14,6 +14,9 @@
             </tr>
         </thead>
         <tbody>
+  @if (Model != null && Model.Any())
+        {
+
         @foreach (var item in Model)
         {
             <tr>
@@ -31,6 +34,14 @@
                 </td>
 
             </tr>
+           }
+         }
+        else
+           {
+            <tr>
+                <td colspan="3" class="text-center">No data found.</td>
+            </tr>
+
         }
         </tbody>
         

@@ -55,11 +55,7 @@ namespace TimeProductivityTracking.web.Controllers
             }
             
 
-            if (!invoices.Any())
-            {
-                return NotFound("No invoices found for the given contractor");
-            }   
-         
+        
             return View(invoices);
 
 
@@ -75,10 +71,7 @@ namespace TimeProductivityTracking.web.Controllers
             var invoice = await _context.Invoices
                 .Include(i => i.Contractor)
                  .FirstOrDefaultAsync(m => m.Id == Id && m.Month == month && m.ContractorId == contractorId); 
-            if (invoice == null)
-            {
-                return NotFound("Not foud data for the given contractor and month");
-            }
+          
 
             return View(invoice);
         }

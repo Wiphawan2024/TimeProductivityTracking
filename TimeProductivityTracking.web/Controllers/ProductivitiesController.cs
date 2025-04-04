@@ -51,9 +51,6 @@ namespace TimeProductivityTracking.web.Controllers
 
             ViewBag.Months = orderedMonths;
 
-
-
-
             //If no month is selected, return an empty list
             if (string.IsNullOrEmpty(selectedMonth))
             {

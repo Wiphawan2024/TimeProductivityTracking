@@ -23,7 +23,7 @@ builder.Services.AddIdentity<IdentityAuthUser, IdentityRole>()
     .AddEntityFrameworkStores<APIContext>()
     .AddDefaultTokenProviders();
 
-// Enable CORS (if needed)
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
@@ -36,7 +36,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure middleware
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,11 +45,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); // 🔥 Added for authentication support
+app.UseAuthentication(); //
 app.UseAuthorization();
 
-app.UseCors("AllowAll"); // 🔥 Added for frontend compatibility
-
+app.UseCors("AllowAll"); // 
 app.MapControllers();
 
 app.Run();

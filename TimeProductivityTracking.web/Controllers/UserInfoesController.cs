@@ -63,13 +63,15 @@ namespace TimeProductivityTracking.web.Controllers
         public IActionResult Create()
 
         {
-            ViewBag.Rate = new SelectList(_context.Rates.Select(r => new
-            {
-                r.RateID,
-                DisplayText = r.RateName + " - € " + r.HourlyWage
-            }),
-            "RateID", "DisplayText"
-              );
+            ViewBag.Rate = new SelectList(_context.Rates
+                .OrderBy(r=>r.RateName) 
+                .Select(r => new
+                {
+                    r.RateID,
+                    DisplayText = r.RateName + " - € " + r.HourlyWage
+                }),
+                    "RateID", "DisplayText"
+                );
 
             return View();
         }
