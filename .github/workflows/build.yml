@@ -29,12 +29,9 @@ jobs:
         working-directory: TimeProductivityTracking.web
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          dotnet sonarscanner begin \
-            /k:"Wiphawan2024_TimeProductivityTracking" \
-            /o:"wiphawan2024" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.cs.opencover.reportsPaths="../TestResults/coverage.opencover.xml"
+        run: >
+          dotnet sonarscanner begin /k:"Wiphawan2024_TimeProductivityTracking" /o:"wiphawan2024" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="../TestResults/coverage.opencover.xml"
+
 
       - name: Build solution
         working-directory: TimeProductivityTracking.web
