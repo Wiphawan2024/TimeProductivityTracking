@@ -24,7 +24,7 @@ jobs:
 
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
-
+     
       - name: Begin SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
@@ -34,7 +34,7 @@ jobs:
             /k:"Wiphawan2024_TimeProductivityTracking" `
             /o:"wiphawan2024" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="../TestResults/coverage.opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="TimeProductivityTracking.UnitTest/TestResults/coverage.opencover.xml"
 
       - name: Build solution
         working-directory: TimeProductivityTracking.web
