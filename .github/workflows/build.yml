@@ -35,10 +35,11 @@ jobs:
       - name: Build solution
         working-directory: TimeProductivityTracking.web
         run: dotnet build --no-incremental
-
+      
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+
