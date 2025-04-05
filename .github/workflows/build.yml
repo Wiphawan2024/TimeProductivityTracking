@@ -30,12 +30,24 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet-sonarscanner begin /k:"Wiphawan2024_TimeProductivityTracking" /o:"wiphawan2024" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet sonarscanner begin \
+            /k:"Wiphawan2024_TimeProductivityTracking" \
+            /o:"wiphawan2024" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.cs.opencover.reportsPaths="../TestResults/coverage.opencover.xml"
 
       - name: Build solution
         working-directory: TimeProductivityTracking.web
         run: dotnet build --no-incremental
       
+      - name: Run tests with coverage
+        run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
+
+      - name: Move coverage report
+        run: |
+          mkdir TestResults
+          cp $(find . -type f -name "coverage.opencover.xml") TestResults/
+
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
