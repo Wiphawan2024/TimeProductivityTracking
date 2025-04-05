@@ -10,7 +10,7 @@
     <IsCollectCoverage>true</IsCollectCoverage>
     <CollectCoverage>true</CollectCoverage>
     <CoverletOutputFormat>opencover</CoverletOutputFormat>
-    <CoverletOutput>../TestResults/coverage.opencover.xml</CoverletOutput>
+    <CoverletOutput>./TestResults/coverage.opencover.xml</CoverletOutput>
 
   </PropertyGroup>
 
