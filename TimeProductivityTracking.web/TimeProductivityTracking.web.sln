@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeProductivityTracking.we
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeProductivityTracking.UnitTest", "..\TimeProductivityTracking.UnitTest\TimeProductivityTracking.UnitTest.csproj", "{18BF67D4-7915-40BE-BC93-9160A3315817}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeProductivityTracking.API", "..\TimeProductivityTracking.API\TimeProductivityTracking.API.csproj", "{31C5CB9D-23A2-49B2-98FC-1ACD1EEAF150}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Release|Any CPU.Build.0 = Release|Any CPU
-		{31C5CB9D-23A2-49B2-98FC-1ACD1EEAF150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31C5CB9D-23A2-49B2-98FC-1ACD1EEAF150}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31C5CB9D-23A2-49B2-98FC-1ACD1EEAF150}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31C5CB9D-23A2-49B2-98FC-1ACD1EEAF150}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
