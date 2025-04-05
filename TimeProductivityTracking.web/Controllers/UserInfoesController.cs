@@ -130,12 +130,14 @@ namespace TimeProductivityTracking.web.Controllers
             var result = await _userManager.AddToRoleAsync(user, roleName);
             if (result.Succeeded)
             {
-                _logger.LogInformation($"Successfully assigned role '{roleName}' to user '{user.UserName}'.");
+                _logger.LogInformation("Successfully assigned role '{roleName}' to user '{User}'",roleName, user.UserName);
                 return RedirectToAction("Index", "Home");
             }
 
             ModelState.AddModelError("", "Failed to assign role.");
-            _logger.LogError($"Failed to assign role '{roleName}' to user '{user.UserName}'. Errors: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            _logger.LogError("Failed to assign role '{Role}' to user '{User}'. Errors:{Errors}",
+              roleName, user.UserName, result.Errors);
+          
             return RedirectToAction(nameof(Index));
         }
 
@@ -197,13 +199,13 @@ namespace TimeProductivityTracking.web.Controllers
                     return Json(new { success = false, message = "Invalid role name." });
                 }
             }
-            _logger.LogInformation($"User role updated successfully for {user.Email}");
+            _logger.LogInformation("User role updated successfully for {Email}",user.Email);
             return Json(new { success = true, message = "User role updated successfully." });
         }
 
         public async Task<IActionResult>CheckAfterRegister(string email)
         {
-
+          
             if (string.IsNullOrEmpty(email))
             {
                 return BadRequest("Invalid email.");
@@ -224,6 +226,10 @@ namespace TimeProductivityTracking.web.Controllers
                     userInfo.Register = 1;
                 }
 
+                if(string.IsNullOrEmpty(userInfo.Email))
+                {
+                    return BadRequest("Invalid email.");
+                }
                 //  Update Role in AspNetUserRoles
                 var user = await _userManager.FindByEmailAsync(userInfo.Email);
                 if (user != null)
@@ -325,6 +331,11 @@ namespace TimeProductivityTracking.web.Controllers
                     // Check if the role has changed
                     if (existingUserInfo.Role != userInfo.Role)
                     {
+                        if (string.IsNullOrEmpty(userInfo.Email))
+                        {
+                            return BadRequest("Invalid email.");
+                        }
+
                         // Get the user from AspNetUsers
                         var user = await _userManager.FindByEmailAsync(userInfo.Email);
                         if (user != null)

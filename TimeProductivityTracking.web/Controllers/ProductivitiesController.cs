@@ -25,16 +25,19 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities
         public async Task<IActionResult> Index(string selectedMonth)
         {
+            var userEmail = User?.Identity?.Name;
             //Get months from database
             var rawMonths = await _context.Productivities
-               .Where(p => p.UserEmail == User.Identity.Name && !string.IsNullOrEmpty(p.Monthly))
+               .Where(p =>  userEmail !=null &&
+                            p.UserEmail == userEmail && 
+                            !string.IsNullOrEmpty(p.Monthly))
                .Select(p => p.Monthly)
                .Distinct()
                .ToListAsync();
 
             // Convert to DateTime and order
             var orderedMonths = rawMonths
-                .Where(m => DateTime.TryParseExact(m, "MMMM yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                .Where(m => !string.IsNullOrWhiteSpace(m) && DateTime.TryParseExact(m, "MMMM yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
                 .Select(m => new
                 {
                     Value = m,
@@ -62,13 +65,13 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 productivities = productivities
                     .Include(p => p.Contractor)
-                    .Where(p => p.Monthly == selectedMonth && p.UserEmail == User.Identity.Name);
+                    .Where(p => p.Monthly == selectedMonth && p.UserEmail == userEmail);
 
             }
             //Fetch and filter productivities based on the selected month
             var productivitiesList = await _context.Productivities
                 .Include(p => p.Contractor)
-                .Where(p => p.Monthly == selectedMonth && p.UserEmail == User.Identity.Name).ToListAsync();
+                .Where(p => p.Monthly == selectedMonth && p.UserEmail == userEmail).ToListAsync();
 
 
             return View(productivitiesList);
@@ -79,7 +82,9 @@ namespace TimeProductivityTracking.web.Controllers
 
         public async Task<IActionResult> Chart(string selectedSEC)
         {
-            string userEmail=User.Identity.Name;
+
+          var userEmail = User?.Identity?.Name;
+            //string userEmail=User?.Identity?.Name;
 
             // Get distinct SEC Names for dropdown
             ViewBag.SECNames = await _context.Productivities
@@ -103,10 +108,13 @@ namespace TimeProductivityTracking.web.Controllers
                 .Where(p => p.SECName == selectedSEC && p.UserEmail == userEmail)
                 .ToListAsync();
 
+           
             var grouped = rawData
-                .GroupBy(p =>  DateTime.ParseExact(p.Monthly,"MMMM yyyy",CultureInfo.InvariantCulture)) //Convert string to date time 
-                .OrderBy(g => g.Key)
-                .ToList();
+            .GroupBy(p => DateTime.ParseExact(p.Monthly!, "MMMM yyyy", CultureInfo.InvariantCulture)) //Convert string to date time 
+            .OrderBy(g => g.Key)
+            .ToList();
+
+ 
 
             ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  
             ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();
@@ -138,7 +146,7 @@ namespace TimeProductivityTracking.web.Controllers
         // GET: Productivities/Create
         public IActionResult Create()
         {
-            //DateTime month;
+            var userEmail = User?.Identity?.Name;
 
             // Generate a list of months
             List<SelectListItem> months = Enumerable.Range(1, 12).Select(i => new SelectListItem
@@ -151,7 +159,7 @@ namespace TimeProductivityTracking.web.Controllers
             ViewBag.Months = months;
          
           
-            var user=_context.Users.FirstOrDefault(u=>u.Email==User.Identity.Name);
+            var user=_context.Users.FirstOrDefault(u=>u.Email==userEmail);
             if (user != null)
             {
                 ViewBag.userId = user.UserId;
@@ -160,20 +168,19 @@ namespace TimeProductivityTracking.web.Controllers
 
             var SECName = _context.SECContracts.ToList();
             var NewProductivity = new List<Productivity>();
-
+          
             foreach (var item in SECName)
             {
                 var product = new Productivity
                 {
-                  
-                    Date=DateTime.Now,
-                 
+
+                    Date = DateTime.Now,
+
                     SECName = item.SECName,
-                    County = Enum.Parse<Counties>(item.County)//Convert the string to the Counties enum
-
-
-
-                };
+             
+                    County = Enum.Parse<Counties>(item.County!)//Convert the string to the Counties enum
+               
+            };
                 NewProductivity.Add(product);
             }
 
@@ -291,12 +298,13 @@ namespace TimeProductivityTracking.web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
         {
+            var userEmail = User?.Identity?.Name;
             if (id != productivity.Id)
             {
                 return NotFound();
             }
 
-            var contractor = await _context.Users.FirstOrDefaultAsync(u => u.Email == User.Identity.Name);
+            var contractor = await _context.Users.FirstOrDefaultAsync(u => u.Email ==userEmail);
             if (contractor == null)
             {
                 return Unauthorized(); // user not found

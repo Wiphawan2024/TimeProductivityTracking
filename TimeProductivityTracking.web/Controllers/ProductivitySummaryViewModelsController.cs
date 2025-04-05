@@ -28,7 +28,9 @@ namespace TimeProductivityTracking.web.Controllers
 
             var data = await _context.Productivities
                     .Include(c => c.Contractor)
-                    .Where(c => (c.statusApproval == "Waiting" ) && c.Contractor.Email == user.Email)
+                    .Where(c => (c.statusApproval == "Waiting" ) 
+                    && c.Contractor !=null
+                    && c.Contractor.Email == user.Email)
                     .ToListAsync();
 
                 var contractor = data
@@ -62,7 +64,7 @@ namespace TimeProductivityTracking.web.Controllers
                 .Where(p => p.ContractorId == ContractorId && p.Monthly == month)
                 .ToListAsync(); 
 
-            if (!productivities.Any())
+            if (productivities.Count==0)
             {
                 return NotFound("No data found for the selected contractor and month.");
             }
@@ -80,7 +82,7 @@ namespace TimeProductivityTracking.web.Controllers
             var toApprove =await _context.Productivities
                 .Where(p => p.Monthly == month && p.ContractorId == ContractorId)
                 .ToListAsync();
-           if (!toApprove.Any())
+           if (toApprove.Count==0)
                 {
                 return NotFound("No productivities found for the given month and contractor");
             }
@@ -101,7 +103,7 @@ namespace TimeProductivityTracking.web.Controllers
                 .Where(u=>u.UserId==ContractorId)
                 .FirstOrDefaultAsync();
 
-            decimal hourlyRate = (decimal)(contractor?.Rate.HourlyWage ?? 0);
+            decimal hourlyRate = (decimal)(contractor?.Rate?.HourlyWage ?? 0);
             decimal totalHours = toApprove.Sum(p => p.AchevedDays) ;
             decimal totalAmout = totalHours * hourlyRate;
 
@@ -110,7 +112,7 @@ namespace TimeProductivityTracking.web.Controllers
             var invoice = new InvoiceViewModel
             {
                 ContractorName = $"{contractor?.FName} {contractor?.LName}",
-                ContractorEmail = contractor.Email,
+                ContractorEmail = contractor?.Email,
                 Month = month,
                 InvoiceDate = DateTime.Now,
                 InvoiceNumber = $"INV--{ContractorId}--{DateTime.Now:yyyyMMddHHmmss}",
@@ -147,20 +149,11 @@ namespace TimeProductivityTracking.web.Controllers
             var productivities = await _context.Productivities
                 .Where(p => p.Monthly == month && p.ContractorId == ContractorId)
                 .ToListAsync();
-            if (!productivities.Any())
+            if (productivities.Count==0)
             {
                 return NotFound("No productivities found for the given month and contractor");
             }
-            /*
-            //update approval status
-            foreach (var productivity in productivities)
-            {
-                productivity.statusApproval = "Cancelled";
-            }
-
-            await _context.SaveChangesAsync(); // Save changes to the database
-            */
-
+        
             return RedirectToAction("Index"); 
         }
 
@@ -179,7 +172,10 @@ namespace TimeProductivityTracking.web.Controllers
                 query = query.Where(p => p.Monthly == selectedMonth);
 
             var data = await query
-                .GroupBy(p => new { p.SECName, p.Monthly, p.Contractor.FName, p.Contractor.LName })
+                .GroupBy(p => new {
+                    p.SECName, p.Monthly, 
+                    FName=p.Contractor !=null?p.Contractor.FName :" ", 
+                    LName=p.Contractor !=null?p.Contractor.LName :" "})
             .Select(g => new ProductivitySummaryViewModel
             {
                 SecName = g.Key.SECName,
@@ -204,7 +200,7 @@ namespace TimeProductivityTracking.web.Controllers
             ViewBag.TotalAchievedDays = query.Sum(p => p.AchevedDays);
 
 
-            return View(data); // data is List<ProductivitySummaryViewModel>
+            return View(data); 
         }
     }
 

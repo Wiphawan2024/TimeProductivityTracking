@@ -42,7 +42,7 @@ namespace TimeProductivityTracking.web.Controllers
 
             return View(sECContract);
         }
-        private IEnumerable<SelectListItem> GetCountiesList()
+        private static IEnumerable<SelectListItem> GetCountiesList()
         {
             return Enum.GetValues(typeof(Counties))
                        .Cast<Counties>()
@@ -52,8 +52,6 @@ namespace TimeProductivityTracking.web.Controllers
                            Text = c.ToString()
                        });
         }
-
-
 
 
         // GET: SECContracts/Create

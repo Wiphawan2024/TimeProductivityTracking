@@ -50,7 +50,8 @@ namespace TimeProductivityTracking.web.Controllers
                 //contractor sees only his invoices
                 invoices = await _context.Invoices
                     .Include(i => i.Contractor)
-                    .Where(i => i.Contractor.Email == user.Email)
+                    .Where(i =>  i.Contractor !=null 
+                                && i.Contractor.Email == user.Email)
                     .ToListAsync();
             }
             
