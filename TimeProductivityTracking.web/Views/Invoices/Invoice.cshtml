@@ -1,5 +1,12 @@
 ﻿@model TimeProductivityTracking.web.ViewModels.InvoiceViewModel
 
+@{
+    var culture = System.Globalization.CultureInfo.GetCultureInfo("en-IE");
+    var vatRate = 0.23m;
+    var vatAmount = Model.TotalAmount * vatRate;
+    var totalWithVat = Model.TotalAmount + vatAmount;
+}
+
 <style>
     table, th, td {
         border: 1px solid #999;
@@ -41,13 +48,15 @@
             <tr>
                 <td>Monthly work hours for @Model.Month</td>
                 <td>@Model.TotalHours</td>
-                <td>@Model.HourlyRate.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-IE"))</td>
-                <td>@Model.TotalAmount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-IE"))</td>
+                <td>@Model.HourlyRate.ToString("C", culture)</td>
+                <td>@Model.TotalAmount.ToString("C", culture)</td>
             </tr>
         </tbody>
     </table>
 
     <div class="total-section">
-        <p><strong>Total Due:</strong> @Model.TotalAmount.ToString("C", System.Globalization.CultureInfo.GetCultureInfo("en-IE"))</p>
+        <p><strong>Subtotal:</strong> @Model.TotalAmount.ToString("C", culture)</p>
+        <p><strong>VAT (23%):</strong> @vatAmount.ToString("C", culture)</p>
+        <p><strong>Total Due (incl. VAT):</strong> @totalWithVat.ToString("C", culture)</p>
     </div>
 </div>

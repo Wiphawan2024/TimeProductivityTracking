@@ -95,7 +95,6 @@ namespace TimeProductivityTracking.web.Controllers
             await _context.SaveChangesAsync();// Save approval updates
 
 
-
             //prepare invoice data
 
             var contractor=await _context.Users
