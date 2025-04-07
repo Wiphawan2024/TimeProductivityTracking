@@ -117,6 +117,25 @@ namespace TimeProductivityTracking.web.Controllers
 
             await _context.SaveChangesAsync();
 
+
+            var toWaiting = await _context.Productivities
+             .Where(p => p.Monthly == productivity!.Monthly && p.ContractorId == productivity.ContractorId)
+             .ToListAsync();
+
+                    if (toWaiting.Count == 0)
+                    {
+                        return NotFound("No productivities found for the given month and contractor");
+                    }
+
+                    //Load contractor info
+                    foreach (var item in toWaiting)
+                    {
+                       item.statusApproval = "Waiting";
+                    }
+                   
+                    await _context.SaveChangesAsync();// Save approval updates
+
+
             // return RedirectToAction("Details", new { contractorId = invoice.ContractorId, month = invoice.Month, Id = invoice.Id });
             return RedirectToAction("Index");
         }

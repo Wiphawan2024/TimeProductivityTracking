@@ -15,7 +15,6 @@ namespace TimeProductivityTracking.web.Data
                     DbContextOptions<ProductivitiesContext>>()))
             {
 
-
                 // Seed Rates
                 if (!context.Rates.Any())
                 {
