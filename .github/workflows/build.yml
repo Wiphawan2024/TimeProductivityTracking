@@ -42,7 +42,10 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build
-
+        
+      - name: Show test results and coverage path
+        run: dir /s TimeProductivityTracking.UnitTest\TestResults
+        
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
