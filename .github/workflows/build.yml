@@ -42,10 +42,16 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
-        
+
       - name: Show test results and coverage path
-        run: dir /s TimeProductivityTracking.UnitTest\TestResults
-        
+        continue-on-error: true
+        shell: pwsh
+        run: |
+          Write-Host "Looking for coverage.opencover.xml..."
+          Get-ChildItem -Recurse -Filter coverage.opencover.xml TimeProductivityTracking.UnitTest\TestResults | ForEach-Object {
+            Write-Host "Found: $($_.FullName)"
+          }
+
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
