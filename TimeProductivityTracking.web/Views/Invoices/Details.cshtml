@@ -59,4 +59,47 @@
         <p><strong>VAT (23%):</strong> @vatAmount.ToString("C", culture)</p>
         <p><strong>Total Due (incl. VAT):</strong> @totalWithVat.ToString("C", culture)</p>
     </div>
+
 </div>
+
+
+@if (User.IsInRole("Manager"))
+{
+    if (string.IsNullOrEmpty(Model.statusApproval))
+    {
+        <div style="text-align:center; margin-top: 20px;">
+            <form asp-action="ApproveInvoice" asp-controller="Invoices" method="post" style="display:inline-block;">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success">Approve</button>
+            </form>
+            <form asp-action="RejectInvoice" asp-controller="Invoices" method="post" style="display:inline-block; margin-left:10px;">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <button type="submit" class="btn btn-danger">Reject</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center mt-3">
+            Invoice has been @Model.statusApproval
+            <br />
+            <a asp-action="Index" asp-controller="Invoices" class="btn btn-outline-primary mt-2">
+                Back to Invoice List
+            </a>
+        </div>
+    }
+}
+else
+{
+    if (!string.IsNullOrEmpty(Model.statusApproval))
+    {
+        <div class="alert alert-info text-center mt-3">
+            Invoice has been @Model.statusApproval
+            <br />
+            <a asp-action="Index" asp-controller="Invoices" class="btn btn-outline-primary mt-2">
+                Back to Invoice List
+            </a>
+        </div>
+    
+    }
+}

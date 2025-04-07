@@ -19,10 +19,11 @@ namespace TimeProductivityTracking.web.Models
             [Precision(18, 2)]
             public decimal TotalHours { get; set; }
             [Precision(18, 2)]
-         public decimal HourlyRate { get; set; }
+            public decimal HourlyRate { get; set; }
             [Precision(18, 2)]
-         public decimal TotalAmount { get; set; }
-      
+            public decimal TotalAmount { get; set; }
+            public string? statusApproval { get; set; }
+
 
 
 

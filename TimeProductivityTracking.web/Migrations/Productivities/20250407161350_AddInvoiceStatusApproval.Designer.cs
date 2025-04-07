@@ -12,8 +12,8 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     [DbContext(typeof(ProductivitiesContext))]
-    [Migration("20250407132837_MyMigration")]
-    partial class MyMigration
+    [Migration("20250407161350_AddInvoiceStatusApproval")]
+    partial class AddInvoiceStatusApproval
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -56,6 +56,9 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                     b.Property<decimal>("TotalHours")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("statusApproval")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

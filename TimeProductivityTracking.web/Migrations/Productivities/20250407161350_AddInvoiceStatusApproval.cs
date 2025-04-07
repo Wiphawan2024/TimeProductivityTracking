@@ -5,25 +5,24 @@
 namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     /// <inheritdoc />
-    public partial class AddPlannedNextMont : Migration
+    public partial class AddInvoiceStatusApproval : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<decimal>(
-                name: "PlannedNextMonth",
-                table: "Productivities",
-                type: "decimal(18,2)",
-                nullable: false,
-                defaultValue: 0m);
+            migrationBuilder.AddColumn<string>(
+                name: "statusApproval",
+                table: "Invoice",
+                type: "nvarchar(max)",
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PlannedNextMonth",
-                table: "Productivities");
+                name: "statusApproval",
+                table: "Invoice");
         }
     }
 }

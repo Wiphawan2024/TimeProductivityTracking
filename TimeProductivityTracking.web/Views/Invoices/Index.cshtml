@@ -10,6 +10,7 @@
                 <th>Email</th>
                 <th>Month</th>
                 <th>Invoice NO</th>
+                <th>Status</th>
                 <th>Action</th>
             </tr>
         </thead>
@@ -24,6 +25,10 @@
                 <td>@item.Contractor.Email</td>
                 <td>@item.Month</td>
                 <td>@item.InvoiceNumber</td>
+                    <td>
+                        @(string.IsNullOrEmpty(item.statusApproval) ? "Pending Approval" : item.statusApproval)
+                    </td>
+
                 <td>
                     <a asp-action="Details"
                        asp-route-id="@item.Id"

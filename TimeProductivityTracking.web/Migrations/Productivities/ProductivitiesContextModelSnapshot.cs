@@ -54,6 +54,9 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("statusApproval")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ContractorId");

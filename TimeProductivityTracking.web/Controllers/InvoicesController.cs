@@ -77,7 +77,53 @@ namespace TimeProductivityTracking.web.Controllers
             return View(invoice);
         }
 
-       
+        [HttpPost]
+        public async Task<IActionResult> ApproveInvoice(int id)
+        {
+            var invoice = await _context.Invoices.Include(i => i.Contractor).FirstOrDefaultAsync(i => i.Id == id);
+            if (invoice == null) return NotFound();
+
+            invoice.statusApproval = "Approved";
+
+            var productivity = await _context.Productivities
+                .FirstOrDefaultAsync(p => p.ContractorId == invoice.ContractorId && p.Monthly == invoice.Month);
+
+            if (productivity != null)
+            {
+                productivity.statusApproval = "Approved";
+            }
+
+            await _context.SaveChangesAsync();
+
+            //  return RedirectToAction("Details", new { contractorId = invoice.ContractorId, month = invoice.Month, Id = invoice.Id });
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RejectInvoice(int id)
+        {
+            var invoice = await _context.Invoices.Include(i => i.Contractor).FirstOrDefaultAsync(i => i.Id == id);
+            if (invoice == null) return NotFound();
+
+            invoice.statusApproval = "Rejected";
+
+            var productivity = await _context.Productivities
+                .FirstOrDefaultAsync(p => p.ContractorId == invoice.ContractorId && p.Monthly == invoice.Month);
+
+            if (productivity != null)
+            {
+                productivity.statusApproval = "Rejected";
+            }
+
+            await _context.SaveChangesAsync();
+
+            // return RedirectToAction("Details", new { contractorId = invoice.ContractorId, month = invoice.Month, Id = invoice.Id });
+            return RedirectToAction("Index");
+        }
+
+
+
+
 
     }
 
