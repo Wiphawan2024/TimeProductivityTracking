@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250407182122_UpdateTask_NProductivities")]
+    partial class UpdateTask_NProductivities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,20 +105,17 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                     b.Property<string>("SECName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Task_N")
+                    b.Property<int>("Task_N")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Task_P")
+                    b.Property<int>("Task_P")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Tasks_A")
+                    b.Property<int>("Tasks_A")
                         .HasColumnType("int");
 
                     b.Property<string>("UserEmail")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("UserInfoUserId")
-                        .HasColumnType("int");
 
                     b.Property<string>("statusApproval")
                         .HasColumnType("nvarchar(max)");
@@ -123,8 +123,6 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                     b.HasKey("Id");
 
                     b.HasIndex("ContractorId");
-
-                    b.HasIndex("UserInfoUserId");
 
                     b.ToTable("Productivities", (string)null);
                 });
@@ -237,10 +235,6 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                         .HasForeignKey("ContractorId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("TimeProductivityTracking.web.Models.UserInfo", null)
-                        .WithMany("Productivities")
-                        .HasForeignKey("UserInfoUserId");
-
                     b.Navigation("Contractor");
                 });
 
@@ -253,11 +247,6 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
                         .IsRequired();
 
                     b.Navigation("Rate");
-                });
-
-            modelBuilder.Entity("TimeProductivityTracking.web.Models.UserInfo", b =>
-                {
-                    b.Navigation("Productivities");
                 });
 #pragma warning restore 612, 618
         }

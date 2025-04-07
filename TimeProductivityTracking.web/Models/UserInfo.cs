@@ -32,6 +32,8 @@ namespace TimeProductivityTracking.web.Models
         public int? RateID { get; set; }
         public Rate? Rate { get; set; }  // Navigation property
         public int Register { get; set; }
+        public virtual ICollection<Productivity> Productivities { get; set; }
+
     }
     public enum Roles { Admin, Manager, HR,Contractor }
 

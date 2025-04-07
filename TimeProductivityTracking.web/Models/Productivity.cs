@@ -25,15 +25,16 @@ namespace TimeProductivityTracking.web.Models
 
         [DisplayName("Planned Next Month")]
         public decimal PlannedNextMonth { get; set; }
+        [DisplayName("Task Next Month")]
+        public Tasks? Task_N {  get; set; }
 
-        public decimal Task_N {  get; set; }
         [DisplayName("Task_P")]
-        public Tasks Task_P { get; set; }
+        public Tasks? Task_P { get; set; }
         [DisplayName("Mentor")]
         public string? CountryMentor_P { get; set; }
 
         public Decimal AchevedDays { get; set; }
-        public Tasks Tasks_A { get; set; }
+        public Tasks? Tasks_A { get; set; }
         public string? CountryMentor_A { get; set; }
         [DisplayName("User Email")]
         public string? UserEmail { get; set; }
@@ -45,7 +46,9 @@ namespace TimeProductivityTracking.web.Models
 
     public enum Counties { Longford, Westmeath, Offaly , Laois }
     public enum Tasks
-    { [Description("New SEC Registered")] NewSECRegistered = 0,
+
+    { 
+      [Description("New SEC Registered")] NewSECRegistered = 0,
       [Description("EMP application submitted")] EMPApplicationSubmitted =1,
       [Description("EMP Completed")] EMPCompleted=2,
       [Description("Project - Indiviudual Solar PV started")] ProjectIndiviudualSolarPVstarted=3,

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
@@ -79,44 +80,39 @@ namespace TimeProductivityTracking.web.Controllers
 
 
         [Authorize]//Ensure only logged-in user
-
-        public async Task<IActionResult> Chart(string selectedSEC)
+        public async Task<IActionResult> ChartByContractor(int? contractorId)
         {
 
-          var userEmail = User?.Identity?.Name;
-            //string userEmail=User?.Identity?.Name;
 
-            // Get distinct SEC Names for dropdown
-            ViewBag.SECNames = await _context.Productivities
-                .Where(p=>p.UserEmail == userEmail)
-                .Select(p => p.SECName)
-                .Distinct()
-                .OrderBy(sec => sec)
-                .ToListAsync();
+            ViewBag.Contractors = await _context.Users  
+                .Where(u=>u.Role==Roles.Contractor )  // Filter by role
+                .Select(u => new SelectListItem
+                {
+                    Value = u.UserId.ToString(),
+                    Text = $"{u.FName} {u.LName} ({u.Email})" // 
+                }).ToListAsync();
 
-            // If no SEC is selected, return empty chart data
-            if (string.IsNullOrEmpty(selectedSEC))
+            if (contractorId == null)
             {
                 ViewBag.ChartMonths = new List<string>();
                 ViewBag.ChartPlanned = new List<decimal>();
+                ViewBag.ChartNextMonth = new List<decimal>();
                 ViewBag.ChartAchieved = new List<decimal>();
                 return View();
             }
 
-            // Get raw data and group in memory
-            var rawData = await _context.Productivities
-                .Where(p => p.SECName == selectedSEC && p.UserEmail == userEmail)
+            var data = await _context.Productivities
+                .Where(p => p.ContractorId == contractorId)
                 .ToListAsync();
 
-           
-            var grouped = rawData
-            .GroupBy(p => DateTime.ParseExact(p.Monthly!, "MMMM yyyy", CultureInfo.InvariantCulture)) //Convert string to date time 
-            .OrderBy(g => g.Key)
-            .ToList();
+            var grouped = data
+                .GroupBy(p => DateTime.ParseExact(p.Monthly!, "MMMM yyyy", CultureInfo.InvariantCulture))
+                .OrderBy(g => g.Key)
+                .ToList();
 
-
-            ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  
+            ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();
             ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();
+            ViewBag.ChartNextMonth = grouped.Select(g => g.Sum(p => p.PlannedNextMonth)).ToList();
             ViewBag.ChartAchieved = grouped.Select(g => g.Sum(p => p.AchevedDays)).ToList();
 
             return View();
@@ -177,7 +173,11 @@ namespace TimeProductivityTracking.web.Controllers
 
                     SECName = item.SECName,
              
-                    County = Enum.Parse<Counties>(item.County!)//Convert the string to the Counties enum
+                    County = Enum.Parse<Counties>(item.County!) , //Convert the string to the Counties enum
+
+                    Task_P=null,
+                    Task_N=null,
+                    Tasks_A=null
                
             };
                 NewProductivity.Add(product);
@@ -188,7 +188,7 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 Console.WriteLine(n.SECName);
             }
-
+            /*
             var plannedDay = new List<SelectDays>
             {
                 new SelectDays { id = 1, name = "Choie1", PlannedDay = 0 },
@@ -204,7 +204,9 @@ namespace TimeProductivityTracking.web.Controllers
                 new SelectDays { id=11,name="Choie11",PlannedDay=1.0m},
             };
 
-            ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
+            */
+
+           // ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
             var sec = _context.SECContracts.ToList();
             ViewData["SEC"] = sec;
 

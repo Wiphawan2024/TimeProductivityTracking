@@ -1,0 +1,72 @@
+﻿@{
+    ViewData["Title"] = "Contractor Productivity Chart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="mb-4">Planned vs Achieved Days by Contractor</h2>
+
+<form asp-action="ChartByContractor" method="get" class="mb-4">
+    <label for="contractorId" class="form-label fw-bold">Select Contractor:</label>
+    @Html.DropDownList("contractorId", ViewBag.Contractors as List<SelectListItem>, "-- Select Contractor --",
+            new { @class = "form-select w-25", onchange = "this.form.submit();" })
+</form>
+
+@if (ViewBag.ChartMonths != null && ViewBag.ChartMonths.Count > 0)
+{
+    <div class="card shadow-sm p-4">
+        <canvas id="barChart" width="1000" height="400"></canvas>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const chartMonths = @Html.Raw(Json.Serialize(ViewBag.ChartMonths));
+        const chartPlanned = @Html.Raw(Json.Serialize(ViewBag.ChartPlanned));
+        const chartNextMonth = @Html.Raw(Json.Serialize(ViewBag.ChartNextMonth));
+        const chartAchieved = @Html.Raw(Json.Serialize(ViewBag.ChartAchieved));
+
+        const ctx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartMonths,
+                datasets: [
+                    {
+                        label: 'Planned This Month',
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        data: chartPlanned
+                    },
+                    {
+                        label: 'Planned Next Month',
+                        backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                        data: chartNextMonth
+                    },
+                    {
+                        label: 'Achieved',
+                        backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                        data: chartAchieved
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    title: {
+                        display: true,
+                        text: 'Contractor Productivity Breakdown'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Days' }
+                    }
+                }
+            }
+        });
+    </script>
+}
+else
+{
+    <div class="alert alert-info">No data available for the selected contractor.</div>
+}

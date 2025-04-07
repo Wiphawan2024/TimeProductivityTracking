@@ -87,15 +87,13 @@
                             @if (User.IsInRole("Manager"))
                             {
                                 <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="SECContracts" asp-action="Index">SEC Details</a></li>
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false">Invoice</a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdown01">
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice Approval</a></li>
-                                      
-                                   
-                                    </ul>
-                                        
-                                </li>
+
+                                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Invoices" asp-action="Index">Invoice Approval</a></li>
+
+                                <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Productivities" asp-action="ChartByContractor"> Chart Productivities</a></li>
+
+                              
+
                             }
                             <!-- Admin allowed all access-->
                             @if (User.IsInRole("Admin"))
