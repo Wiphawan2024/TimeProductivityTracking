@@ -38,5 +38,7 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeProductivityTracking.web\TimeProductivityTracking.web.csproj" />
   </ItemGroup>
+  
+
 
 </Project>
