@@ -41,7 +41,7 @@ namespace TimeProductivityTracking.web.Controllers
                 .Select(m => new
                 {
                     Value = m,
-                    Date = DateTime.ParseExact(m, "MMMM yyyy", CultureInfo.InvariantCulture)
+                    Date = DateTime.ParseExact(m!, "MMMM yyyy", CultureInfo.InvariantCulture)
                 })
                 .OrderBy(x => x.Date)
                 .Select(x => new SelectListItem
@@ -114,7 +114,6 @@ namespace TimeProductivityTracking.web.Controllers
             .OrderBy(g => g.Key)
             .ToList();
 
- 
 
             ViewBag.ChartMonths = grouped.Select(g => g.Key.ToString("MMMM yyyy")).ToList();  
             ViewBag.ChartPlanned = grouped.Select(g => g.Sum(p => p.PlannedDays)).ToList();

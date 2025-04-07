@@ -16,9 +16,13 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("SEC Name")]
         public string? SECName { get; set; }
         [DisplayName("County")]
+
         public Counties County { get; set; }
-        [DisplayName("Planned Days")]
+
+        [DisplayName("Planned This Month")]
         public Decimal PlannedDays { get; set; }
+
+
         [DisplayName("Task_P")]
         public Tasks Task_P { get; set; }
         [DisplayName("Mentor")]
