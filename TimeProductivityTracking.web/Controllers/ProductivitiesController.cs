@@ -215,7 +215,7 @@ namespace TimeProductivityTracking.web.Controllers
     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
+        public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
       {
 
          
@@ -250,6 +250,7 @@ namespace TimeProductivityTracking.web.Controllers
                         item.SECName = productivities[i].SECName;
                         item.County = productivities[i].County;
                         item.PlannedDays = productivities[i].PlannedDays;
+                        item.PlannedNextMonth = productivities[i].PlannedNextMonth;
                         item.Task_P = productivities[i].Task_P;
                         item.CountryMentor_P = productivities[i].CountryMentor_P;
                         item.AchevedDays = productivities[i].AchevedDays;
@@ -295,7 +296,7 @@ namespace TimeProductivityTracking.web.Controllers
   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
         {
             var userEmail = User?.Identity?.Name;
             if (id != productivity.Id)
@@ -328,6 +329,7 @@ namespace TimeProductivityTracking.web.Controllers
                     originalProductivity.SECName = productivity.SECName;
                     originalProductivity.County = productivity.County;
                     originalProductivity.PlannedDays = productivity.PlannedDays;
+                    originalProductivity.PlannedNextMonth= productivity.PlannedNextMonth;
                     originalProductivity.Task_P = productivity.Task_P;
                     originalProductivity.CountryMentor_P = productivity.CountryMentor_P;
                     originalProductivity.AchevedDays = productivity.AchevedDays;

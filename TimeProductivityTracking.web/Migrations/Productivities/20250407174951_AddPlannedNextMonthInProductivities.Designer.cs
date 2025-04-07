@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TimeProductivityTracking.web.Data;
 
@@ -11,9 +12,11 @@ using TimeProductivityTracking.web.Data;
 namespace TimeProductivityTracking.web.Migrations.Productivities
 {
     [DbContext(typeof(ProductivitiesContext))]
-    partial class ProductivitiesContextModelSnapshot : ModelSnapshot
+    [Migration("20250407174951_AddPlannedNextMonthInProductivities")]
+    partial class AddPlannedNextMonthInProductivities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -101,9 +104,6 @@ namespace TimeProductivityTracking.web.Migrations.Productivities
 
                     b.Property<string>("SECName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Task_N")
-                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Task_P")
                         .HasColumnType("int");

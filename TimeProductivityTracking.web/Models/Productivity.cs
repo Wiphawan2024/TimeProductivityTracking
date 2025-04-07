@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using NuGet.Protocol.Core.Types;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -22,7 +23,10 @@ namespace TimeProductivityTracking.web.Models
         [DisplayName("Planned This Month")]
         public Decimal PlannedDays { get; set; }
 
+        [DisplayName("Planned Next Month")]
+        public decimal PlannedNextMonth { get; set; }
 
+        public decimal Task_N {  get; set; }
         [DisplayName("Task_P")]
         public Tasks Task_P { get; set; }
         [DisplayName("Mentor")]

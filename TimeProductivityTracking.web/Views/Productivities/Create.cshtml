@@ -31,8 +31,10 @@
     <div class="form-group">
         <th> <a>County </a> </th>
     </div>
+    <th> <a>Planned This Month(Hours) </a> </th>
+    <th> <a>Task This Month</a> </th>
     <th> <a>Planned Next Month(Hours) </a> </th>
-    <th> <a>Task Planned</a> </th>
+   <th> <a>Task Next Month</a> </th>
     <th> <a>Mentor Planned</a> </th>
     <th> <a>Acheved This Month(Hours) </a> </th>
     <th> <a>Task Acheved</a> </th>
@@ -54,8 +56,16 @@
                 <th><input asp-for="@Model[i].SECName" value="@item.SECName" type="text" class="form-control sec-name-input" required title="@item.SECName" />  </th>
                 <th> <input asp-for="@Model[i].County" value="@item.County" /> </th>          
                 <th> <input asp-for="@Model[i].PlannedDays" value="0" class="form-control short-input" required /> </th>
+                <th class="dropdown-container">
+                        @Html.DropDownListFor(Model => Model[i].Task_P,
+                                 new SelectList(Enum.GetValues(typeof(Tasks))),
+                                 "Select ..",
+                                 new { @class = "form-control", required = "required" })
+                </th>
+                <th> <input asp-for="@Model[i].PlannedNextMonth" value="0" class="form-control short-input" required /> </th>
+
                 <th class="dropdown-container"> 
-                    @Html.DropDownListFor(Model => Model[i].Task_P, 
+                    @Html.DropDownListFor(Model => Model[i].Task_N, 
                         new SelectList(Enum.GetValues(typeof(Tasks))), 
                         "Select ..",
                                  new { @class = "form-control", required = "required" })

@@ -31,9 +31,11 @@ else
         <tr>
             <th>Month</th>
             <th>SEC Name</th>
-            <th>County</th>
+            <th>County</th>          
+            <th>Planned This Month(Hours)</th>
+            <th>Tasks This Month</th>
             <th>Planned Next Month(Hours)</th>
-            <th>Tasks Planned</th>
+            <th>Tasks Next Month</th>
             <th>Achieved This Month(Hours)</th>
             <th>Tasks Achieved</th>
             <th>Mentor</th>
@@ -50,8 +52,13 @@ else
                 <td>@item.County</td>
                 <td>@item.PlannedDays</td>
                 <td>@item.Task_P</td>
+
+                <td>@item.PlannedNextMonth</td>
+                <td>@item.Task_N</td>
+
                 <td>@item.AchevedDays</td>
                 <td>@item.Tasks_A</td>
+
                 <td>@($"{item.Contractor?.FName} {item.Contractor?.LName}")</td>
                 <td>@item.statusApproval</td>
 
