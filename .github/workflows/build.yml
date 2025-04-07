@@ -42,6 +42,11 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
+      
+      - name: Convert coverage to OpenCover
+        run: |
+          dotnet tool install -g dotnet-reportgenerator-globaltool
+          reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:opencover
 
       - name: Show test results and coverage path
         continue-on-error: true
