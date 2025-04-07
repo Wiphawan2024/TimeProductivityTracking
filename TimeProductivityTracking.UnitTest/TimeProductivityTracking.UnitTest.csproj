@@ -7,8 +7,10 @@
     <Nullable>enable</Nullable>
 
     <!--Sonar Code Coverage settings -->
-    <IsCollectCoverage>true</IsCollectCoverage>
-    <CollectCoverage>true</CollectCoverage>
+    <!-- <IsCollectCoverage>true</IsCollectCoverage  -->
+    <!--<CollectCo  verage>true</CollectCoverage>   -->
+    
+    
     <CoverletOutputFormat>opencover</CoverletOutputFormat>
     <CoverletOutput>./TestResults/coverage.opencover.xml</CoverletOutput>
 
