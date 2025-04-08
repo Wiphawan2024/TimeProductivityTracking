@@ -52,12 +52,12 @@ jobs:
         continue-on-error: true
         shell: pwsh
         run: |
-          Write-Host "Looking for coverage.opencover.xml..."
-          Get-ChildItem -Recurse -Filter coverage.opencover.xml . | ForEach-Object {
+          Write-Host "Looking for SonarQube.xml..."
+          Get-ChildItem -Recurse -Filter SonarQube.xml . | ForEach-Object {
             Write-Host "Found: $($_.FullName)"
             Get-Content $_.FullName | Select-Object -First 10
           }
-
+    
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
