@@ -143,112 +143,94 @@ namespace TimeProductivityTracking.web.Controllers
         {
             var userEmail = User?.Identity?.Name;
 
-            // Generate a list of months
-            List<SelectListItem> months = Enumerable.Range(1, 12).Select(i => new SelectListItem
+            // Generate months
+            ViewBag.Months = Enumerable.Range(1, 12).Select(i => new SelectListItem
             {
                 Value = i.ToString(),
-                Text = new DateTime(2022, i, 1).ToString("MMMM") // Get month name
+                Text = new DateTime(1, i, 1).ToString("MMMM")
             }).ToList();
 
-            // Pass to the ViewBag 
-            ViewBag.Months = months;
-         
-          
-            var user=_context.Users.FirstOrDefault(u=>u.Email==userEmail);
+            // Generate years: current year to current + 2
+            ViewBag.Years = Enumerable.Range(DateTime.Now.Year, 2).Select(y => new SelectListItem
+            {
+                Value = y.ToString(),
+                Text = y.ToString()
+            }).ToList();
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == userEmail);
             if (user != null)
             {
                 ViewBag.userId = user.UserId;
-             
             }
 
             var SECName = _context.SECContracts.ToList();
             var NewProductivity = new List<Productivity>();
-          
+
             foreach (var item in SECName)
             {
-                var product = new Productivity
+                NewProductivity.Add(new Productivity
                 {
-
                     Date = DateTime.Now,
-
                     SECName = item.SECName,
-             
-                    County = Enum.Parse<Counties>(item.County!) , //Convert the string to the Counties enum
-
-                    Task_P=null,
-                    Task_N=null,
-                    Tasks_A=null
-               
-            };
-                NewProductivity.Add(product);
+                    County = Enum.Parse<Counties>(item.County!),
+                    Task_P = null,
+                    Task_N = null,
+                    Tasks_A = null
+                });
             }
 
-
-            foreach (var n in NewProductivity)
-            {
-                Console.WriteLine(n.SECName);
-            }
-            /*
-            var plannedDay = new List<SelectDays>
-            {
-                new SelectDays { id = 1, name = "Choie1", PlannedDay = 0 },
-                new SelectDays { id = 2, name = "Choie2", PlannedDay = 0.1m },
-                new SelectDays { id=3,name="Choie3",PlannedDay=0.2m},
-                new SelectDays { id=4,name="Choie4",PlannedDay=0.3m},
-                new SelectDays { id=5,name="Choie5",PlannedDay=0.4m},
-                new SelectDays { id=6,name="Choie6",PlannedDay=0.5m},
-                new SelectDays { id=7,name="Choie7",PlannedDay=0.6m},
-                new SelectDays { id=8,name="Choie8",PlannedDay=0.7m},
-                new SelectDays { id=9,name="Choie9",PlannedDay=0.8m},
-                new SelectDays { id=10,name="Choie10",PlannedDay=0.9m},
-                new SelectDays { id=11,name="Choie11",PlannedDay=1.0m},
-            };
-
-            */
-
-           // ViewBag.SelectPlanDay = new SelectList(plannedDay, "id", "PlannedDay");
-            var sec = _context.SECContracts.ToList();
-            ViewData["SEC"] = sec;
+            ViewData["SEC"] = _context.SECContracts.ToList();
 
             return View(NewProductivity);
+
         }
 
         // POST: Productivities/Create
     
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string SelectedMonth,[Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
+        public async Task<IActionResult> Create(string SelectedMonth, string SelectedYear, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_P,CounryMentor_P,AchevedDays,Tasks_A,CounryMentor_A")] List< Productivity> productivities)
       {
 
-         
+                var contractorId = 0;
+                var currentUserEmail = User?.Identity?.Name;
+                var contractor = _context.Users.FirstOrDefault(u => u.Email == currentUserEmail);
+                if (contractor != null)
+                {
+                    contractorId = contractor.UserId;
+                }
 
-            var contractorId =0;
-            var currentUserEmail=User?.Identity?.Name;
-            var contractor=_context.Users.FirstOrDefault(u=>u.Email==currentUserEmail);
-            if (contractor!=null)
-            {
-                contractorId=contractor.UserId;
-            }
-
-            if (ModelState.IsValid)
-            {
-               
-                int i = 0;
-
-                foreach (var item in productivities)
-                        {
-                        item.Date = DateTime.Now;
-
-                    // Convert month number to month name + year 2025
-                    if (!string.IsNullOrEmpty(SelectedMonth) && int.TryParse(SelectedMonth, out int monthNumber) && monthNumber >= 1 && monthNumber <= 12)
+                if (ModelState.IsValid)
+                {
+                    // Convert SelectedMonth and SelectedYear into "MMMM yyyy"
+                    string selectedMonthFormatted = "";
+                    if (!string.IsNullOrEmpty(SelectedMonth) &&
+                        int.TryParse(SelectedMonth, out int monthNumber) &&
+                        !string.IsNullOrEmpty(SelectedYear) &&
+                        int.TryParse(SelectedYear, out int yearNumber))
                     {
-                        item.Monthly = new DateTime(2025, monthNumber, 1).ToString("MMMM yyyy"); // Example: "January 2025"
+                        selectedMonthFormatted = new DateTime(yearNumber, monthNumber, 1).ToString("MMMM yyyy");
                     }
                     else
                     {
-                        item.Monthly = DateTime.Now.ToString("MMMM yyyy"); // Default to current month + year 2025
+                        selectedMonthFormatted = DateTime.Now.ToString("MMMM yyyy");
                     }
-               
+
+                    // Check for duplicate entries for this user in that month
+                    bool exists = await _context.Productivities
+                        .AnyAsync(p => p.Monthly == selectedMonthFormatted && p.UserEmail == currentUserEmail);
+
+                    if (exists)
+                    {
+                        TempData["ErrorMessage"] = $"You already submitted productivity for {selectedMonthFormatted}.";
+                        return RedirectToAction(nameof(Create));
+                    }
+
+                    int i = 0;
+                    foreach (var item in productivities)
+                    {
+                        item.Date = DateTime.Now;
+                        item.Monthly = selectedMonthFormatted;
                         item.SECName = productivities[i].SECName;
                         item.County = productivities[i].County;
                         item.PlannedDays = productivities[i].PlannedDays;
@@ -258,22 +240,21 @@ namespace TimeProductivityTracking.web.Controllers
                         item.AchevedDays = productivities[i].AchevedDays;
                         item.Tasks_A = productivities[i].Tasks_A;
                         item.CountryMentor_A = productivities[i].CountryMentor_A;
-                        item.UserEmail=User?.Identity?.Name;
+                        item.UserEmail = currentUserEmail;
                         item.ContractorId = contractorId;
                         item.statusApproval = "Waiting";
-                    i++;
+                        i++;
+                    }
+
+                    _context.AddRange(productivities);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Index));
                 }
 
-
-                _context.AddRange(productivities);
-                await _context.SaveChangesAsync();
-
                 return RedirectToAction(nameof(Index));
-            }
-            return RedirectToAction(nameof(Index));
+            
         }
-
-
 
 
         // GET: Productivities/Edit/5
