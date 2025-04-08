@@ -35,7 +35,7 @@ jobs:
             /k:"Wiphawan2024_TimeProductivityTracking" `
             /o:"wiphawan2024" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="coverage-report/SonarQube.xml"
+            /d:sonar.cs.opencover.reportsPaths="**/SonarQube.xml"
 
       - name: Build solution
         working-directory: TimeProductivityTracking.web
@@ -43,14 +43,20 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
-        
+
+      - name: Copy coverage report to a known location
+        run: |
+          mkdir coverage-temp
+          copy TimeProductivityTracking.UnitTest\TestResults\*\coverage.cobertura.xml coverage-temp\
+        shell: cmd
+
       - name: Convert coverage to SonarQube format (licensed)
         env:
           REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
         run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
           reportgenerator `
-            -reports:"**/coverage.cobertura.xml" `
+            -reports:"coverage-temp/coverage.cobertura.xml" `
             -targetdir:"coverage-report" `
             -reportfile:"SonarQube.xml" `
             -reporttypes:SonarQube `
@@ -59,6 +65,15 @@ jobs:
           Get-ChildItem -Recurse -Filter *.xml | ForEach-Object {
             Write-Host " - $($_.FullName)"
           }
+        shell: pwsh
+
+      - name: Show SonarQube.xml location
+        run: |
+          Get-ChildItem -Recurse -Filter SonarQube.xml | ForEach-Object {
+            Write-Host "✅ Found report: $($_.FullName)"
+            Get-Content $_.FullName | Select-Object -First 10
+          }
+        shell: pwsh
 
       - name: Show test results and coverage path
         continue-on-error: true
