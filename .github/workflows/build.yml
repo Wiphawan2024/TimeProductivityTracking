@@ -44,10 +44,12 @@ jobs:
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
 
       - name: Copy coverage report to known location
+        shell: pwsh
         run: |
-          mkdir coverage-temp
-          copy TimeProductivityTracking.UnitTest\TestResults\*\coverage.cobertura.xml coverage-temp\
-        shell: cmd
+          New-Item -ItemType Directory -Force -Path coverage-temp
+          Get-ChildItem -Path "TimeProductivityTracking.UnitTest/TestResults" -Recurse -Filter coverage.cobertura.xml |
+            Copy-Item -Destination coverage-temp
+
 
       - name: Convert coverage to SonarQube format (licensed)
         env:
