@@ -76,6 +76,20 @@ namespace TimeProductivityTracking.web.Controllers
             return View(productivities);
         }
 
+        public IActionResult ProductivityByInvoice(string month, int contractorId,int InvoiceId)
+        {
+            var records = _context.Productivities
+                .Where(p => p.Monthly == month && p.ContractorId == contractorId)
+                .ToList();
+            var user =_context.Users.FirstOrDefault(u => u.UserId == contractorId);
+            ViewBag.Contractor = user!=null? $"{user.FName} {user.LName}": "Unknown";
+            ViewBag.Month = month;
+            ViewBag.InvoiceID = InvoiceId;
+            ViewBag.ContractorId = contractorId;
+
+            return View(records);
+        }
+
         [HttpGet]
         public async Task<IActionResult> Approve(string month, int ContractorId)
         {

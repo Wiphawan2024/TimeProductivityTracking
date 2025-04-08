@@ -76,7 +76,22 @@
                 <input type="hidden" name="id" value="@Model.Id" />
                 <button type="submit" class="btn btn-danger">Reject</button>
             </form>
+
+
+            @* Details Productivites*@
+            <a asp-controller="ProductivitySummaryViewModels"
+               asp-action="ProductivityByInvoice"
+               asp-route-month="@Model.Month"
+               asp-route-contractorId="@Model.ContractorId"
+               asp-route-InvoiceId="@Model.Id"
+
+               class="btn btn-info me-2">
+                View Details
+            </a>
+
         </div>
+
+
     }
     else
     {

@@ -1,0 +1,45 @@
+﻿@model List<TimeProductivityTracking.web.Models.Productivity>
+
+@{
+    ViewData["Title"] = "Productivity Details";
+}
+
+<h4>Productivity Details for @ViewBag.Contractor -  @ViewBag.Month</h4>
+<hr />
+
+<table class="table table-bordered table-striped text-center">
+    <thead class="table-dark">
+        <tr>
+            <th>SEC Name</th>
+            <th>County</th>
+            <th>Planned This Month</th>
+            <th>Task This Month</th>
+            <th>Planned Next Month</th>
+            <th>Task Next Month</th>
+            <th>Achieved This Month</th>
+            <th>Task Achieved</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.SECName</td>
+                <td>@p.County</td>
+                <td>@p.PlannedDays</td>
+                <td>@p.Task_P</td>
+                <td>@p.PlannedNextMonth</td>
+                <td>@p.Task_N</td>
+                <td>@p.AchevedDays</td>
+                <td>@p.Tasks_A</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Details" asp-controller="Invoices"
+   asp-route-contractorId="@ViewBag.ContractorId"
+   asp-route-id="@ViewBag.InvoiceID"
+   asp-route-month="@ViewBag.Month" class="btn btn-secondary">
+    Back to Invoice
+</a>
