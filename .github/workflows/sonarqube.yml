@@ -43,7 +43,7 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
-
+        
       - name: Convert coverage to SonarQube format (licensed)
         env:
           REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
@@ -52,8 +52,13 @@ jobs:
           reportgenerator `
             -reports:"**/coverage.cobertura.xml" `
             -targetdir:"coverage-report" `
+            -reportfile:"SonarQube.xml" `
             -reporttypes:SonarQube `
             -license:"$env:REPORTGENERATOR_LICENSE"
+          Write-Host "Generated reports:"
+          Get-ChildItem -Recurse -Filter *.xml | ForEach-Object {
+            Write-Host " - $($_.FullName)"
+          }
 
       - name: Show test results and coverage path
         continue-on-error: true
