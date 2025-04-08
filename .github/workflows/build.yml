@@ -24,7 +24,7 @@ jobs:
 
       - name: Install SonarScanner for .NET
         run: dotnet tool install --global dotnet-sonarscanner
-     
+
       - name: Begin SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
@@ -34,7 +34,7 @@ jobs:
             /k:"Wiphawan2024_TimeProductivityTracking" `
             /o:"wiphawan2024" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="TimeProductivityTracking.UnitTest/TestResults/**/coverage.opencover.xml"
+            /d:sonar.cs.opencover.reportsPaths="**/SonarQube.xml"
 
       - name: Build solution
         working-directory: TimeProductivityTracking.web
@@ -42,22 +42,36 @@ jobs:
 
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
-      
-      - name: Convert coverage to OpenCover
+
+      - name: Copy coverage report to known location
+        run: |
+          mkdir coverage-temp
+          copy TimeProductivityTracking.UnitTest\TestResults\*\coverage.cobertura.xml coverage-temp\
+        shell: cmd
+
+      - name: Convert coverage to SonarQube format (licensed)
+        env:
+          REPORTGENERATOR_LICENSE: ${{ secrets.REPORTGENERATOR_LICENSE }}
         run: |
           dotnet tool install -g dotnet-reportgenerator-globaltool
-          reportgenerator -reports:"**/coverage.cobertura.xml" -targetdir:"coverage-report" -reporttypes:opencover
+          reportgenerator `
+            -reports:"coverage-temp/coverage.cobertura.xml" `
+            -targetdir:"coverage-report" `
+            -reportfile:"SonarQube.xml" `
+            -reporttypes:SonarQube `
+            -license:"$env:REPORTGENERATOR_LICENSE"
+        shell: pwsh
 
       - name: Show test results and coverage path
         continue-on-error: true
         shell: pwsh
         run: |
           Write-Host "Looking for SonarQube.xml..."
-          Get-ChildItem -Recurse -Filter SonarQube.xml . | ForEach-Object {
+          Get-ChildItem -Recurse -Filter SonarQube.xml | ForEach-Object {
             Write-Host "Found: $($_.FullName)"
             Get-Content $_.FullName | Select-Object -First 10
           }
-    
+
       - name: End SonarQube Analysis
         working-directory: TimeProductivityTracking.web
         env:
