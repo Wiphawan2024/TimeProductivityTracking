@@ -92,7 +92,7 @@ public class ProductivitiesControllerTests : IDisposable
 
         var productivityList = new List<Productivity>();
 
-        var result = await _controller.Create("1", productivityList) as RedirectToActionResult;
+        var result = await _controller.Create("1","2025", productivityList) as RedirectToActionResult;
 
         Assert.NotNull(result);
         Assert.Equal("Index", result.ActionName);
