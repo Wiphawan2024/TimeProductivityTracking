@@ -43,12 +43,17 @@ jobs:
       - name: Run tests with coverage
         run: dotnet test TimeProductivityTracking.UnitTest/TimeProductivityTracking.UnitTest.csproj --no-build --collect:"XPlat Code Coverage"
 
-      - name: Copy coverage report to known location
+      - name: Create temp folder for coverage report
         shell: pwsh
         run: |
-          New-Item -ItemType Directory -Force -Path coverage-temp
-          Get-ChildItem -Path "TimeProductivityTracking.UnitTest/TestResults" -Recurse -Filter coverage.cobertura.xml |
-            Copy-Item -Destination coverage-temp
+          mkdir coverage-temp
+          $file = Get-ChildItem -Recurse -Filter 'coverage.cobertura.xml' -Path 'TimeProductivityTracking.UnitTest\TestResults' | Select-Object -First 1
+          if ($file) {
+              Copy-Item $file.FullName -Destination coverage-temp\
+          } else {
+              Write-Host "❌ Coverage file not found!"
+              exit 1
+          }
 
 
       - name: Convert coverage to SonarQube format (licensed)
