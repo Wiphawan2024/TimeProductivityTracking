@@ -33,7 +33,8 @@ namespace TimeProductivityTracking.web.Data
 
                 /*
                 foreach (Rate r in rates)
-                {
+                
+
                     context.Rates.Add(r);
                 }*/
 
