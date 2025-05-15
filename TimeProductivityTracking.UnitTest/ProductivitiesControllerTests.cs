@@ -1,14 +1,11 @@
-﻿using Xunit;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Security.Claims;
 using TimeProductivityTracking.web.Controllers;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
-using System;
+using Xunit;
 
 public class ProductivitiesControllerTests : IDisposable
 {

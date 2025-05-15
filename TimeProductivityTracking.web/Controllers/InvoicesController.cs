@@ -84,7 +84,7 @@ namespace TimeProductivityTracking.web.Controllers
             if (invoice == null) return NotFound();
 
             invoice.statusApproval = "Approved";
-
+/*
             var productivity = await _context.Productivities
                 .FirstOrDefaultAsync(p => p.ContractorId == invoice.ContractorId && p.Monthly == invoice.Month);
 
@@ -92,6 +92,17 @@ namespace TimeProductivityTracking.web.Controllers
             {
                 productivity.statusApproval = "Approved";
             }
+*/
+
+            var productivities = await _context.Productivities
+    .Where(p => p.ContractorId == invoice.ContractorId && p.Monthly == invoice.Month)
+    .ToListAsync();
+
+            foreach (var p in productivities)
+            {
+                p.statusApproval = "Approved";
+            }
+
 
             await _context.SaveChangesAsync();
 

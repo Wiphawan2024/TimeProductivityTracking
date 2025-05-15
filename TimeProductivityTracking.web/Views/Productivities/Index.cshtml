@@ -62,7 +62,7 @@ else
                 <td>@($"{item.Contractor?.FName} {item.Contractor?.LName}")</td>
                 <td>@item.statusApproval</td>
 
-                @if(item.statusApproval=="Invoiced")
+                @if(item.statusApproval=="Invoiced" || item.statusApproval=="Approved")
                     {
                        <td>
                    <span style="color: grey; text-decoration: underline; cursor: not-allowed; pointer-events: none;">

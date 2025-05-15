@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeProductivityTracking.we
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TimeProductivityTracking.UnitTest", "..\TimeProductivityTracking.UnitTest\TimeProductivityTracking.UnitTest.csproj", "{18BF67D4-7915-40BE-BC93-9160A3315817}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeProductivityTracking.SeleniumTest", "..\TimeProductivityTracking.SeleniumTest\TimeProductivityTracking.SeleniumTest.csproj", "{DCDD9339-21CA-4354-BB16-73F1C6BABB83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BF67D4-7915-40BE-BC93-9160A3315817}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCDD9339-21CA-4354-BB16-73F1C6BABB83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCDD9339-21CA-4354-BB16-73F1C6BABB83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCDD9339-21CA-4354-BB16-73F1C6BABB83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCDD9339-21CA-4354-BB16-73F1C6BABB83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

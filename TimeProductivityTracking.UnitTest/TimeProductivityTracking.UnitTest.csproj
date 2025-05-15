@@ -40,6 +40,13 @@
   <ItemGroup>
     <ProjectReference Include="..\TimeProductivityTracking.web\TimeProductivityTracking.web.csproj" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="Settings.job">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   
 
 

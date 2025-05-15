@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Routing.Matching;
 using Microsoft.EntityFrameworkCore;
 using TimeProductivityTracking.web.Data;
 using TimeProductivityTracking.web.Models;
-
 namespace TimeProductivityTracking.web.Controllers
 {
     public class ProductivitiesController : Controller
@@ -139,10 +132,10 @@ namespace TimeProductivityTracking.web.Controllers
         }
 
         // GET: Productivities/Create
-        public IActionResult Create()
+        public IActionResult Create(int? SelectedMonth, int? SelectedYear)
         {
-            var userEmail = User?.Identity?.Name;
-
+            var userEmail = User?.Identity?.Name;           
+            
             // Generate months
             ViewBag.Months = Enumerable.Range(1, 12).Select(i => new SelectListItem
             {
@@ -163,23 +156,54 @@ namespace TimeProductivityTracking.web.Controllers
                 ViewBag.userId = user.UserId;
             }
 
+            if (SelectedMonth == null || SelectedYear == null)
+            {
+                // Don't proceed with data load until both are selected
+                return View(new List<Productivity>());
+            }
+
+            //Load SEC data and previous month productivity
             var SECName = _context.SECContracts.ToList();
             var NewProductivity = new List<Productivity>();
 
+
+            //Get current and orevioous month 
+            var prevMonth =SelectedMonth == 1 ? 12 : SelectedMonth.Value - 1;
+            var prevYear = SelectedMonth == 1 ? SelectedYear.Value - 1 : SelectedYear.Value;
+            string prevMonthOj = $"{CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(prevMonth)}{prevYear}";
+
+            //Load previous month's productivity
+            var preMonthProductivity = _context.Productivities
+                .Where(p => p.Monthly.Trim().Replace(" ","") == prevMonthOj
+                && p.CountryMentor_P==userEmail)
+                .ToList();
+
             foreach (var item in SECName)
             {
+                //get previous month record 
+             
+             var previous = preMonthProductivity
+                .FirstOrDefault(p => p.SECName?.Trim().ToLower() == item.SECName?.Trim().ToLower());
+          
                 NewProductivity.Add(new Productivity
                 {
                     Date = DateTime.Now,
                     SECName = item.SECName,
                     County = Enum.Parse<Counties>(item.County!),
-                    Task_P = null,
+                    PlannedDays=previous?.PlannedNextMonth ?? 0,                   
+                    Task_P = previous?.Task_N,
+                    PlannedNextMonth=0,
                     Task_N = null,
-                    Tasks_A = null
+                    CountryMentor_P=userEmail,
+                    Tasks_A = null,
+                    CountryMentor_A=userEmail
+                    
                 });
             }
 
-            ViewData["SEC"] = _context.SECContracts.ToList();
+        
+
+          //  ViewData["SEC"] = _context.SECContracts.ToList();
 
             return View(NewProductivity);
 

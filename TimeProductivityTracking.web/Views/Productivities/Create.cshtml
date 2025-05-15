@@ -7,126 +7,126 @@
 <h4>Create Productivities</h4>
 <hr />
 
-@if(TempData["ErrorMessage"] != null)
+@if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-warning alert-dismissible fade show d-flex align-items-center" role="alert">
         <svg xmlns="http://www.w3.org/2000/svg" class="bi flex-shrink-0 me-2" width="24" height="24" fill="currentColor" viewBox="0 0 16 16" role="img" aria-label="Warning:">
             <path d="M8.982 1.566a1.13 1.13 0 0 0-1.964 0L.165 13.233c-.457.778.091 1.767.982 1.767h13.707c.89 0 1.438-.99.982-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.002 0 1 1 0 0 1 2.002 0z" />
         </svg>
-        <div>
-            @TempData["ErrorMessage"]
-        </div>
+        <div>@TempData["ErrorMessage"]</div>
         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<form asp-action="Create">
-
-    @*
-
-   
+<!-- GET form to load data based on selected month/year -->
+<form method="get" asp-action="Create">
     <div class="mb-3">
         <label for="SelectedMonth" class="form-label">Select a Month</label>
         @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Please Select a Month",
-                 new { @class = "form-control w-25", required = "required" })
-    </div>
-    *@
-
-    <div class="mb-3">
-        <label for="SelectedMonth" class="form-label">Select a Month</label>
-        @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Please Select a Month",
-                 new { @class = "form-control w-25 d-inline-block", required = "required", style = "width: 150px;" })
+                 new { @class = "form-control d-inline-block", style = "width: 150px;" })
 
         @Html.DropDownList("SelectedYear", ViewBag.Years as List<SelectListItem>, "Select Year",
-                 new { @class = "form-control w-25 d-inline-block ms-2", required = "required", style = "width: 120px;" })
-    </div>
+                 new { @class = "form-control d-inline-block ms-2", style = "width: 120px;" })
 
-    <table class="table table-bordered table-striped align-middle text-center">
-        <thead class="table-dark">
-            <tr>
-                <th>SEC Name</th>
-                <th>County</th>
-                <th>Planned This Month (Hours)</th>
-                <th>Task This Month</th>
-                <th>Planned Next Month (Hours)</th>
-                <th>Task Next Month</th>
-                <th>Mentor Planned</th>
-                <th>Achieved This Month (Hours)</th>
-                <th>Task Achieved</th>
-                <th>Mentor Achieved</th>
-            </tr>
-        </thead>
-        <tbody>
-            @{
-                int i = 0;
-            }
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <input asp-for="@Model[i].SECName"
-                               class="form-control form-control-sm text-start"
-                               readonly
-                               style="min-width: 180px; white-space: normal;" />
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].County"
-                               class="form-control form-control-sm text-center"
-                               style="width: 90px;" readonly />
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].PlannedDays"
-                               value="0"
-                               class="form-control form-control-sm text-center" />
-                    </td>
-                    <td>
-                        @Html.DropDownListFor(Model => Model[i].Task_P,
-                                 new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>()),
-                                 "Select ..",
-                                 new { @class = "form-control form-control-sm" })
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].PlannedNextMonth"
-                               value="0"
-                               class="form-control form-control-sm text-center" />
-                    </td>
-                    <td>
-                        @Html.DropDownListFor(Model => Model[i].Task_N,
-                                 new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>()),
-                                 "Select ..",
-                                 new { @class = "form-control form-control-sm" })
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].CountryMentor_P"
-                               value="@User.Identity.Name"
-                               class="form-control form-control-sm text-center" />
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].AchevedDays"
-                               value="0"
-                               class="form-control form-control-sm text-center" />
-                    </td>
-                    <td>
-                        @Html.DropDownListFor(Model => Model[i].Tasks_A,
-                                 new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>()),
-                                 "Select ..",
-                                 new { @class = "form-control form-control-sm" })
-                    </td>
-                    <td>
-                        <input asp-for="@Model[i].CountryMentor_A"
-                               value="@User.Identity.Name"
-                               class="form-control form-control-sm text-center" />
-                    </td>
-                </tr>
-                i++;
-            }
-        </tbody>
-    </table>
-
-    <div class="form-group">
-        <input type="submit" value="Create" class="btn btn-primary" />
+        <input type="submit" value="Load Data" class="btn btn-primary ms-2" />
     </div>
 </form>
+
+<!-- Only show table if model has data -->
+@if (Model.Count > 0)
+{
+    <form asp-action="Create" method="post">
+   
+
+        <input type="hidden" name="SelectedMonth" value="@(Context.Request.Query["SelectedMonth"])" />
+        <input type="hidden" name="SelectedYear" value="@(Context.Request.Query["SelectedYear"])" />
+
+        <table class="table table-bordered table-striped align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>SEC Name</th>
+                    <th>County</th>
+                    <th>Planned This Month (Hours)</th>
+                    <th>Task This Month</th>
+                    <th>Planned Next Month (Hours)</th>
+                    <th>Task Next Month</th>
+                    <th>Mentor Planned</th>
+                    <th>Achieved This Month (Hours)</th>
+                    <th>Task Achieved</th>
+                    <th>Mentor Achieved</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="@Model[i].SECName"
+                                   class="form-control form-control-sm text-start"
+                                   readonly
+                                   style="min-width: 180px; white-space: normal;" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model[i].County"
+                                   class="form-control form-control-sm text-center"
+                                   style="width: 90px;" readonly />
+                        </td>
+                        <td>
+                            <input asp-for="@Model[i].PlannedDays"
+                                   class="form-control form-control-sm text-center @(Model[i].PlannedDays > 0 ? "bg-warning-subtle" : "")" />
+                        </td>
+                        <td>
+                           
+
+                            @Html.DropDownListFor(m => m[i].Task_P,
+                                     new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>(), Model[i].Task_P),
+                                     "Select ..",
+                                     new { @class = "form-control form-control-sm" })
+
+                        </td>
+
+
+                        <td>
+                            <input asp-for="@Model[i].PlannedNextMonth"
+                                   class="form-control form-control-sm text-center" />
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m[i].Task_N,
+                                     new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>()),
+                                     "Select ..",
+                                     new { @class = "form-control form-control-sm" })
+                        </td>
+                        <td>
+                            <input asp-for="@Model[i].CountryMentor_P"
+                                   value="@User.Identity.Name"
+                                   class="form-control form-control-sm text-center" />
+                        </td>
+                        <td>
+                            <input asp-for="@Model[i].AchevedDays"
+                                   class="form-control form-control-sm text-center" />
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m[i].Tasks_A,
+                                     new SelectList(Enum.GetValues(typeof(Tasks)).Cast<Tasks?>()),
+                                     "Select ..",
+                                     new { @class = "form-control form-control-sm" })
+                        </td>
+                        <td>
+                            <input asp-for="@Model[i].CountryMentor_A"
+                                   value="@User.Identity.Name"
+                                   class="form-control form-control-sm text-center" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-success" />
+        </div>
+    </form>
+}
+
 
 @section Scripts {
     @{
