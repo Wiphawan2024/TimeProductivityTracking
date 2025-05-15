@@ -1,11 +1,8 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Linq;
-using System.Threading;
 
 namespace TimeProductivityTracking.SeleniumTest
 {
@@ -76,11 +73,13 @@ namespace TimeProductivityTracking.SeleniumTest
 
             // Assert login form visible again
             Assert.IsTrue(_driver.FindElement(By.Id("Input_Email")).Displayed);
+
+
         }
 
 
         [TestMethod]
-        public void NavigationTest_PagesAccessibleAfterLogin()
+        public void NavigationTest_ContractorPagesAccessibleAfterLogin()
         {
             _driver.Url = "https://secmanagement.azurewebsites.net/Identity/Account/Login";
 
@@ -108,7 +107,15 @@ namespace TimeProductivityTracking.SeleniumTest
             wait.Until(d => d.PageSource.Contains("Contractor") || d.FindElements(By.TagName("select")).Count > 0);
             Assert.IsTrue(_driver.PageSource.Contains("Contractor"));
 
+            // 4. Navigate to /Productivities/Invoices
+            _driver.Navigate().GoToUrl("https://secmanagement.azurewebsites.net/Invoices");
+            wait.Until(d => d.PageSource.Contains("Contractor") || d.FindElements(By.TagName("select")).Count > 0);
+            Assert.IsTrue(_driver.PageSource.Contains("Contractor"));
 
+            // 4. Navigate to /Productivities/Generate Invoices
+            _driver.Navigate().GoToUrl("https://secmanagement.azurewebsites.net/ProductivitySummaryViewModels");
+            wait.Until(d => d.PageSource.Contains("Contractor") || d.FindElements(By.TagName("select")).Count > 0);
+            Assert.IsTrue(_driver.PageSource.Contains("Contractor"));
         }
 
         [TestCleanup]
