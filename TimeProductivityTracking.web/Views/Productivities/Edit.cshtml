@@ -33,26 +33,55 @@
                 <input asp-for="PlannedDays" class="form-control" />
                 <span asp-validation-for="PlannedDays" class="text-danger"></span>
             </div>
+           
+
             <div class="form-group">
                 <label asp-for="Task_P" class="control-label"></label>
-                <input asp-for="Task_P" class="form-control" />
+                @Html.DropDownListFor(model => model.Task_P,
+                         new SelectList(Enum.GetValues(typeof(Tasks))),
+                         "Select ..",
+                         new { @class = "form-control" })
                 <span asp-validation-for="Task_P" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <label asp-for="PlannedNextMonth" class="control-label"></label>
+                <input asp-for="PlannedNextMonth" class="form-control" />
+                <span asp-validation-for="PlannedNextMonth" class="text-danger"></span>
+            </div>
+          
+
+            <div class="form-group">
+                <label asp-for="Task_N" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Task_N,
+                         new SelectList(Enum.GetValues(typeof(Tasks))),
+                         "Select ..",
+                         new { @class = "form-control" })
+                <span asp-validation-for="Task_N" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <label asp-for="CountryMentor_P" class="control-label"></label>
                 <input asp-for="CountryMentor_P" class="form-control" />
                 <span asp-validation-for="CountryMentor_P" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label asp-for="AchevedDays" class="control-label"></label>
                 <input asp-for="AchevedDays" class="form-control" />
                 <span asp-validation-for="AchevedDays" class="text-danger"></span>
             </div>
+          
             <div class="form-group">
                 <label asp-for="Tasks_A" class="control-label"></label>
-                <input asp-for="Tasks_A" class="form-control" />
+                @Html.DropDownListFor(model => model.Tasks_A,
+                         new SelectList(Enum.GetValues(typeof(Tasks))),
+                         "Select ..",
+                         new { @class = "form-control" })
                 <span asp-validation-for="Tasks_A" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="CountryMentor_A" class="control-label"></label>
                 <input asp-for="CountryMentor_A" class="form-control" />
