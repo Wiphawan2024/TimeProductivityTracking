@@ -19,7 +19,7 @@
 }
 
 <!-- GET form to load data based on selected month/year -->
-<form method="get" asp-action="Create">
+<form method="get" asp-action="Create" >
     <div class="mb-3">
         <label for="SelectedMonth" class="form-label">Select a Month</label>
         @Html.DropDownList("SelectedMonth", ViewBag.Months as List<SelectListItem>, "Please Select a Month",
@@ -35,12 +35,13 @@
 <!-- Only show table if model has data -->
 @if (Model.Count > 0)
 {
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" id="productivityForm">
    
 
         <input type="hidden" name="SelectedMonth" value="@(Context.Request.Query["SelectedMonth"])" />
         <input type="hidden" name="SelectedYear" value="@(Context.Request.Query["SelectedYear"])" />
 
+        <div id="validationMessage" class="alert alert-danger d-none" role="alert"></div>
         <table class="table table-bordered table-striped align-middle text-center">
             <thead class="table-dark">
                 <tr>
@@ -73,7 +74,9 @@
                         </td>
                         <td>
                             <input asp-for="@Model[i].PlannedDays"
-                                   class="form-control form-control-sm text-center @(Model[i].PlannedDays > 0 ? "bg-warning-subtle" : "")" />
+                                   min="0"
+                                   class="form-control form-control-sm text-center @(Model[i].PlannedDays > 0 ? "bg-warning-subtle" : "")"
+                                   id="PlannedDays"/>
                         </td>
                         <td>
                            
@@ -88,7 +91,9 @@
 
                         <td>
                             <input asp-for="@Model[i].PlannedNextMonth"
-                                   class="form-control form-control-sm text-center" />
+                                   min="0"
+                                   class="form-control form-control-sm text-center" 
+                                   id="PlannedNext"/>
                         </td>
                         <td>
                             @Html.DropDownListFor(m => m[i].Task_N,
@@ -103,7 +108,9 @@
                         </td>
                         <td>
                             <input asp-for="@Model[i].AchevedDays"
-                                   class="form-control form-control-sm text-center" />
+                                   min="0"
+                                   class="form-control form-control-sm text-center" 
+                                   id="achevedDays"/>
                         </td>
                         <td>
                             @Html.DropDownListFor(m => m[i].Tasks_A,
@@ -127,9 +134,29 @@
     </form>
 }
 
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    } <script>
+              document.getElementById("productivityForm").addEventListener("submit", function (e) {
+                  const plannedNext = document.getElementById("PlannedNextMonth");
+                  const plannedDays = document.getElementById("PlannedDays");
+                  const achievedDays = document.getElementById("AchevedDays");
+
+                  const fields = [
+                      { input: plannedDays, label: "Planned This Month (Hours)" },
+                      { input: plannedNext, label: "Planned Next Month (Hours)" },
+                      { input: achievedDays, label: "Achieved This Month (Hours)" }
+                  ];
+
+                  for (let field of fields) {
+                      if (field.input && parseFloat(field.input.value) < 0) {
+                          e.preventDefault();
+                          alert(field.label + " cannot be negative.");
+                          field.input.focus();
+                          return;
+                      }
+                  }
+              });
+    </script>
 }

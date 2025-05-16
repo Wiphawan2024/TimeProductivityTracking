@@ -8,7 +8,6 @@ namespace TimeProductivityTracking.web.Models
 {
     public class Productivity
     {
-
         public int Id { get; set; }
         [DisplayName("Date")]
         [DataType(DataType.Date)]
@@ -20,20 +19,21 @@ namespace TimeProductivityTracking.web.Models
 
         public Counties County { get; set; }
 
-        [DisplayName("Planned This Month")]
+        [DisplayName("Planned This Month (Hours)")]
         public Decimal PlannedDays { get; set; }
 
-        [DisplayName("Planned Next Month")]
+        [DisplayName("Planned Next Month (Hours)")]
         public decimal PlannedNextMonth { get; set; }
-        [DisplayName("Task Next Month")]
+        [DisplayName("Task Planned Next Month")]
         public Tasks? Task_N {  get; set; }
 
-        [DisplayName("Task_P")]
+        [DisplayName("Task Planned This Month")]
         public Tasks? Task_P { get; set; }
         [DisplayName("Mentor")]
         public string? CountryMentor_P { get; set; }
-
+        [DisplayName("Acheved (Hours)")]
         public Decimal AchevedDays { get; set; }
+        [DisplayName("Task Acheved")]
         public Tasks? Tasks_A { get; set; }
         public string? CountryMentor_A { get; set; }
         [DisplayName("User Email")]

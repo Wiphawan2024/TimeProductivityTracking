@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" id="productivityForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
@@ -30,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="PlannedDays" class="control-label"></label>
-                <input asp-for="PlannedDays" class="form-control" />
+                <input asp-for="PlannedDays" class="form-control" id="PlannedDays"/>
                 <span asp-validation-for="PlannedDays" class="text-danger"></span>
             </div>
            
@@ -46,7 +46,7 @@
 
             <div class="form-group">
                 <label asp-for="PlannedNextMonth" class="control-label"></label>
-                <input asp-for="PlannedNextMonth" class="form-control" />
+                <input asp-for="PlannedNextMonth" class="form-control" id="PlannedNextMonth" />
                 <span asp-validation-for="PlannedNextMonth" class="text-danger"></span>
             </div>
           
@@ -69,7 +69,7 @@
 
             <div class="form-group">
                 <label asp-for="AchevedDays" class="control-label"></label>
-                <input asp-for="AchevedDays" class="form-control" />
+                <input asp-for="AchevedDays" class="form-control" id="AchevedDays" />
                 <span asp-validation-for="AchevedDays" class="text-danger"></span>
             </div>
           
@@ -99,6 +99,31 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+
+
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    } <script>
+              document.getElementById("productivityForm").addEventListener("submit", function (e) {
+                  const plannedNext = document.getElementById("PlannedNextMonth");
+                  const plannedDays = document.getElementById("PlannedDays");
+                  const achievedDays = document.getElementById("AchevedDays");
+
+                  const fields = [
+                      { input: plannedDays, label: "Planned This Month (Hours)" },
+                      { input: plannedNext, label: "Planned Next Month (Hours)" },
+                      { input: achievedDays, label: "Achieved This Month (Hours)" }
+                  ];
+
+                  for (let field of fields) {
+                      if (field.input && parseFloat(field.input.value) < 0) {
+                          e.preventDefault();
+                          alert(field.label + " cannot be negative.");
+                          field.input.focus();
+                          return;
+                      }
+                  }
+              });
+    </script>
 }

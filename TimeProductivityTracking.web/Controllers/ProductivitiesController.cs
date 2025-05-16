@@ -303,7 +303,7 @@ namespace TimeProductivityTracking.web.Controllers
   
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Date,Monthly,SECName,County,PlannedDays,PlannedNextMonth ,Task_N,Task_P,CountryMentor_P,AchevedDays,Tasks_A,CountryMentor_A,statusApproval")] Productivity productivity)
         {
             var userEmail = User?.Identity?.Name;
             if (id != productivity.Id)
@@ -336,8 +336,11 @@ namespace TimeProductivityTracking.web.Controllers
                     originalProductivity.SECName = productivity.SECName;
                     originalProductivity.County = productivity.County;
                     originalProductivity.PlannedDays = productivity.PlannedDays;
+
                     originalProductivity.PlannedNextMonth= productivity.PlannedNextMonth;
+                    originalProductivity.Task_N = productivity.Task_N;
                     originalProductivity.Task_P = productivity.Task_P;
+
                     originalProductivity.CountryMentor_P = productivity.CountryMentor_P;
                     originalProductivity.AchevedDays = productivity.AchevedDays;
                     originalProductivity.Tasks_A = productivity.Tasks_A;
@@ -347,7 +350,7 @@ namespace TimeProductivityTracking.web.Controllers
                     // Keep contractor consistent (based on logged-in user)
                     originalProductivity.ContractorId = contractor.UserId;
                     originalProductivity.UserEmail = contractor.Email;
-                    originalProductivity.statusApproval = productivity.statusApproval;
+                    originalProductivity.statusApproval =  "Waiting"; ;
 
 
                     await _context.SaveChangesAsync();
