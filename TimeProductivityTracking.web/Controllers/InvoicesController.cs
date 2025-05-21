@@ -141,7 +141,7 @@ namespace TimeProductivityTracking.web.Controllers
                     //Load contractor info
                     foreach (var item in toWaiting)
                     {
-                       item.statusApproval = "Waiting";
+                       item.statusApproval = "Rejected";
                     }
                    
                     await _context.SaveChangesAsync();// Save approval updates
