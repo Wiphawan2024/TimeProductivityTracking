@@ -336,18 +336,14 @@ namespace TimeProductivityTracking.web.Controllers
                     originalProductivity.SECName = productivity.SECName;
                     originalProductivity.County = productivity.County;
                     originalProductivity.PlannedDays = productivity.PlannedDays;
-
                     originalProductivity.PlannedNextMonth= productivity.PlannedNextMonth;
                     originalProductivity.Task_N = productivity.Task_N;
                     originalProductivity.Task_P = productivity.Task_P;
-
                     originalProductivity.CountryMentor_P = productivity.CountryMentor_P;
                     originalProductivity.AchevedDays = productivity.AchevedDays;
                     originalProductivity.Tasks_A = productivity.Tasks_A;
                     originalProductivity.CountryMentor_A = productivity.CountryMentor_A;
-
-
-                    // Keep contractor consistent (based on logged-in user)
+                    
                     originalProductivity.ContractorId = contractor.UserId;
                     originalProductivity.UserEmail = contractor.Email;
                     originalProductivity.statusApproval =  "Waiting"; ;
@@ -366,6 +362,21 @@ namespace TimeProductivityTracking.web.Controllers
                         throw;
                     }
                 }
+
+                var checkStatus = await _context.Productivities
+                    .Where(p => p.UserEmail== contractor.Email && p.Monthly==productivity.Monthly)
+                    .ToListAsync();
+                if (checkStatus != null)
+                {
+
+                    foreach (var p in checkStatus)
+                    {
+                        p.statusApproval = "Waiting";
+                    }
+                    await _context.SaveChangesAsync();
+                }
+
+
                 return RedirectToAction(nameof(Index));
             }
             return View(productivity);
